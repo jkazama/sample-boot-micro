@@ -1,0 +1,13 @@
+---
+spring:
+  profiles: app
+  application.name: micro-app
+
+server:
+  port: 8090
+
+extension:
+  hibernate:
+    default.createDrop: true
+    system.createDrop: true
+  datafixture.enabled: true

@@ -1,0 +1,34 @@
+---
+spring:
+  application.name: micro-registry
+  aop.proxy-target-class: true
+  autoconfigure.exclude:
+    - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+    - org.springframework.boot.devtools.autoconfigure.DevToolsDataSourceAutoConfiguration
+  main.show-banner: false 
+  jackson:
+    serialization:
+      indent_output: true
+      write_dates_as_timestamps: false
+
+server:
+  port: 8761
+
+security:
+  user.password: unused
+  basic.enabled: false
+
+management:
+  context-path: /api/management
+  security.enabled: false
+
+eureka:
+  instance:
+    hostname: localhost
+    leaseRenewalIntervalInSeconds: 5
+    statusPageUrlPath: ${management.context-path}/info
+    healthCheckUrlPath: ${management.context-path}/health
+    preferIpAddress: true
+  client:
+    registerWithEureka: false
+    fetchRegistry: false

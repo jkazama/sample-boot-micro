@@ -1,0 +1,8 @@
+bootRepackage {
+  mainClass = 'sample.MicroRegistry'
+}
+
+dependencies {
+  compile "org.springframework.cloud:spring-cloud-starter-eureka-server"
+  compile "com.h2database:h2:1.4.+"
+}

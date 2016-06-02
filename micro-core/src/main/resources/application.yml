@@ -1,0 +1,99 @@
+---
+spring:
+  application.name: sample-boot-micro
+  aop.proxy-target-class: true
+  autoconfigure.exclude:
+    - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+    - org.springframework.boot.devtools.autoconfigure.DevToolsDataSourceAutoConfiguration
+  messages.basename: messages-validation, messages
+  main.show-banner: false 
+  jackson:
+    serialization:
+      indent_output: true
+      write_dates_as_timestamps: false
+
+server:
+  port: 8080
+  error:
+    whitelabel.enabled: false
+    path: /api/error
+
+security:
+  user.password: unused
+  basic.enabled: false
+
+multipart:
+  maxFileSize: 20MB
+  maxRequestSize: 20MB
+
+management:
+  context-path: /api/management
+  security.enabled: false
+  health:
+    diskspace.enabled: true
+    db.enabled: true
+
+eureka:
+  instance:
+    statusPageUrlPath: ${management.context-path}/info
+    healthCheckUrlPath: ${management.context-path}/health
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    service-url.defaultZone: http://localhost:8761/eureka/
+
+extension:
+  datasource:
+    default:
+      driver-class-name: org.h2.Driver
+      url: jdbc:h2:tcp://localhost:9092/mem:testdb
+      username:
+      password:
+    system:
+      driver-class-name: org.h2.Driver
+      url: jdbc:h2:tcp://localhost:9092/mem:system
+      username:
+      password:
+  hibernate:
+    default:
+      dialect: org.hibernate.dialect.H2Dialect
+      packageToScan: sample.model
+      showSql: true
+      createDrop: false
+    system:
+      dialect: org.hibernate.dialect.H2Dialect
+      packageToScan: sample.context
+      showSql: true
+      createDrop: false
+
+---
+spring:
+  profiles: production
+
+management.security.enabled: true
+
+extension:
+  datasource:
+    default:
+      driver-class-name: oracle.jdbc.OracleDriver
+      url: jdbc:oracle:thin:@xxx.xxx.xxx.xxx:1521:xx
+      username: XXXXXX
+      password: XXXXXX
+    system:
+      driver-class-name: oracle.jdbc.OracleDriver
+      url: jdbc:oracle:thin:@xxx.xxx.xxx.xxx:1521:xx
+      username: XXXXXX
+      password: XXXXXX
+  hibernate:
+    default:
+      dialect: org.hibernate.dialect.Oracle10gDialect
+      showSql: false
+      createDrop: false
+    system:
+      dialect: org.hibernate.dialect.Oracle10gDialect
+      showSql: false
+      createDrop: false
+  security:
+    auth.enabled: true
+    cors.enabled: false
+  datafixture.enabled: false
