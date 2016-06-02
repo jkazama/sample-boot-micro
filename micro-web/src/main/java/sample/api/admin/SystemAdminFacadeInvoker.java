@@ -15,6 +15,9 @@ import sample.context.audit.AuditActor.FindAuditActor;
 import sample.context.audit.AuditEvent.FindAuditEvent;
 import sample.context.orm.PagingList;
 
+/**
+ * システム系社内ユースケースの API 実行処理を表現します。
+ */
 @Component
 public class SystemAdminFacadeInvoker extends RestInvokerSupport implements SystemAdminFacade {
 

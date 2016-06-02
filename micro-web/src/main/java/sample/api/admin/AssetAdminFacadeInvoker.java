@@ -11,6 +11,9 @@ import sample.api.RestInvokerSupport;
 import sample.model.asset.CashInOut;
 import sample.model.asset.CashInOut.FindCashInOut;
 
+/**
+ * 資産系社内ユースケースの API 実行処理を表現します。
+ */
 @Component
 public class AssetAdminFacadeInvoker extends RestInvokerSupport implements AssetAdminFacade {
 

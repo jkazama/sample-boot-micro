@@ -16,7 +16,7 @@ import sample.model.master.Holiday.RegHoliday;
 import sample.usecase.MasterAdminService;
 
 /**
- * 社内マスタ系ユースケースの外部公開処理を表現します。
+ * マスタ系社内ユースケースの外部公開処理を表現します。
  */
 @RestController
 @RequestMapping(Path)

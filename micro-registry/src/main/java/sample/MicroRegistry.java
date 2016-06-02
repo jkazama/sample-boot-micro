@@ -10,7 +10,7 @@ import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 import org.springframework.context.annotation.*;
 
 /**
- * アプリケーションプロセスの起動クラス。
+ * Eureka Server の起動クラス。
  * <p>本クラスを実行する事でSpringBootが提供する組込Tomcatでのアプリケーション起動が行われます。
  */
 @SpringBootApplication

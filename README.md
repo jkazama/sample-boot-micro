@@ -60,7 +60,7 @@ Gradle のマルチプロジェクト構成をとっています。
 
 ```
 - build.gradle                        … Gradle プロジェクト定義
-- settings.gradle                     …　Gradle プロジェクト設定
+- settings.gradle                     … Gradle プロジェクト設定
 gradle                                … Gradle 実行バイナリ
 micro-app                             … アプリケーションプロセス ( ドメイン API )
   - build.gradle                      … サブプロジェクト固有のプロジェクト定義

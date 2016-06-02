@@ -16,7 +16,7 @@ import sample.model.asset.CashInOut.FindCashInOut;
 import sample.usecase.AssetAdminService;
 
 /**
- * 社内資産系ユースケースの外部公開処理を表現します。
+ * 資産系社内ユースケースの外部公開処理を表現します。
  */
 @RestController
 @RequestMapping(Path)

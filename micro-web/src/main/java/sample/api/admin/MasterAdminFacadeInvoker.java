@@ -11,6 +11,9 @@ import sample.api.RestInvokerSupport;
 import sample.model.master.*;
 import sample.model.master.Holiday.RegHoliday;
 
+/**
+ * マスタ系社内ユースケースの API 実行処理を表現します。
+ */
 @Component
 public class MasterAdminFacadeInvoker extends RestInvokerSupport implements MasterAdminFacade {
 

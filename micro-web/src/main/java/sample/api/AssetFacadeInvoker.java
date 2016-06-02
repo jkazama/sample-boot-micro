@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 import sample.model.asset.CashInOut;
 import sample.model.asset.CashInOut.RegCashOut;
 
+/**
+ * 資産系ユースケースの API 実行処理を表現します。
+ */
 @Component
 public class AssetFacadeInvoker extends RestInvokerSupport implements AssetFacade {
 

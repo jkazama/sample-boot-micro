@@ -20,7 +20,7 @@ import sample.context.orm.PagingList;
 import sample.usecase.SystemAdminService;
 
 /**
- * 社内システム系ユースケースの外部公開処理を表現します。
+ * システム系社内ユースケースの外部公開処理を表現します。
  */
 @RestController
 @RequestMapping(Path)
