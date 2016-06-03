@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 
 /**
- * アプリケーションにおけるBean定義を表現します。
+ * アプリケーションにおける汎用 Bean 定義を表現します。
  * <p>クラス側でコンポーネント定義していない時はこちらで明示的に記載してください。
  */
 @Configuration

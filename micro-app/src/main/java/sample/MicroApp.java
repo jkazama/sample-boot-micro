@@ -21,6 +21,7 @@ import sample.usecase.AccountService;
 /**
  * アプリケーションプロセスの起動クラス。
  * <p>本クラスを実行する事でSpringBootが提供する組込Tomcatでのアプリケーション起動が行われます。
+ * <p>自動的に Eureka Server へ登録されます。
  * <p>自動設定対象として以下のパッケージをスキャンしています。
  * <ul>
  * <li>sample.context
@@ -43,7 +44,7 @@ public class MicroApp {
     
     /** Domain 層のコンテナ管理を表現します。 */
     @Configuration
-    static class DomainConfig {
+    static class DomainAutoConfig {
         
         /** データ生成ユーティリティ */
         @Bean
@@ -52,7 +53,7 @@ public class MicroApp {
             return new DataFixtures();
         }
         
-        /** 休日管理アクセサ */
+        /** 休日情報アクセサ */
         @Bean
         HolidayAccessor holidayAccessor(DefaultRepository rep) {
             return new HolidayAccessor(rep);
@@ -67,8 +68,12 @@ public class MicroApp {
     
     /** プロセススコープの拡張定義を表現します。 */
     @Configuration
-    static class ProcessConfig {
+    static class ProcessAutoConfig {
         
+        /**
+         * リクエストに利用者情報が設定されていた時はそのままスレッドローカルへ紐づけます。
+         * <p>同期Servletでのみ適切に動きます。
+         */
         @Bean
         public RestActorSessionBindFilter restActorSessionBindFilter(ActorSession session) {
             return new RestActorSessionBindFilter(session);
@@ -78,7 +83,7 @@ public class MicroApp {
     
     /** 拡張ヘルスチェック定義を表現します。 */
     @Configuration
-    static class HealthCheckConfig {
+    static class HealthCheckAuthConfig {
         
         /** 営業日チェック */
         @Bean

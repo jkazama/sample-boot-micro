@@ -32,3 +32,15 @@ eureka:
   client:
     registerWithEureka: false
     fetchRegistry: false
+
+extension.test.db.enabled: true
+
+---
+spring:
+  profiles: production
+
+management.security.enabled: true
+
+extension:
+  security.cors.enabled: false
+  test.db.enabled: false

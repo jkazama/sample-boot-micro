@@ -42,9 +42,14 @@ public class MicroWeb {
             .run(args);
     }
     
+    /** Spring Cloud 関連の定義を表現します。 */
     @Configuration
     static class DiscoveryAutoConfig {
-               
+        
+        /**
+         * Ribbon 経由で Eureka がサポートしているサービスを実行するための RestTemplate。
+         * <p>リクエスト時に利用者情報を紐づけています。
+         */
         @Bean
         @LoadBalanced
         RestTemplate restTemplate(ActorSession session) {

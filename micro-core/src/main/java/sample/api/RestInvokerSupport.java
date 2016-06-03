@@ -14,6 +14,7 @@ import sample.context.rest.RestInvoker;
 
 /**
  * Spring Cloud Netflix 標準の API クライアント要求アプローチをサポートします。
+ * <p>API クライアント側の FacadeInvoker 基底処理として利用してください。
  */
 public abstract class RestInvokerSupport {
     

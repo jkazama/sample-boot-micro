@@ -6,7 +6,7 @@ import org.springframework.http.*;
 
 /**
  * Spring Cloud Netflix 標準の API サーバ実行アプローチをサポートします。
- * <p>API サーバ側の RestContoroller 基底処理として利用してください。
+ * <p>API サーバ側の FacadeExporter ( RestContoroller ) 基底処理として利用してください。
  */
 public abstract class RestExporterSupport {
 

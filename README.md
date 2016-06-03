@@ -5,19 +5,17 @@ sample-boot-micro
 
 [Spring Cloud Netflix](https://cloud.spring.io/spring-cloud-netflix/) の仕組みを利用したマイクロサービス実装サンプルです。
 
-[Spring Boot](http://projects.spring.io/spring-boot/) / [Spring Security](http://projects.spring.io/spring-security/) / [Hibernate ORM](http://hibernate.org/orm/) を元にした DDD サンプル実装です。  
-モノリシックなアプローチについては [sample-boot-hibernate](https://github.com/jkazama/sample-boot-hibernate) を参考にしてください。  
-フレームワークではないので、 Spring Boot を利用したマルチプロジェクトを立ち上げる際に元テンプレートとして利用して下さい。
+[Spring Boot](http://projects.spring.io/spring-boot/) / [Spring Security](http://projects.spring.io/spring-security/) / [Hibernate ORM](http://hibernate.org/orm/) を元にしたマルチプロジェクト下での DDD サンプルとしても利用できます。  
+
+> モノリシックなアプローチについては [sample-boot-hibernate](https://github.com/jkazama/sample-boot-hibernate) を参考にしてください。  
+
+フレームワークとしては作っていないため、 Spring Boot を利用したマルチプロジェクトを立ち上げる際の元テンプレートとして利用される事を期待しています。
 
 考え方の骨子については以前発表した資料 ( [Spring Bootを用いたドメイン駆動設計](http://www.slideshare.net/jkazama/jsug-20141127) ) を参照してください。
 
-UI 側の実装サンプルについては [sample-ui-vue](https://github.com/jkazama/sample-ui-vue) / [sample-ui-react](https://github.com/jkazama/sample-ui-react) を参照してください。
+UI 側の実装サンプルについては [sample-ui-vue](https://github.com/jkazama/sample-ui-vue) / [sample-ui-react](https://github.com/jkazama/sample-ui-react) などを利用してください。
 
----
-
-本サンプルは Spring Boot を用いたドメインモデリングの実装例としても利用できます。実際にそれなりの規模の案件で運用されていた実装アプローチなので、モデリングする際の参考事例としてみてもらえればと思います。  
-
-*※ JavaDoc に記載をしていますが参考実装レベルです。製品水準のコードが含まれているわけではありません。*
+*※ JavaDoc に記載をしていますが現状のものは参考実装レベルです。製品水準のコードが含まれているわけではありません。*
 
 #### レイヤリングの考え方
 
@@ -30,14 +28,14 @@ UI 側の実装サンプルについては [sample-ui-vue](https://github.com/jk
 | ドメイン        | 純粋なドメイン処理 ( 外部リソースに依存しない )                      |
 | インフラ        | DI コンテナや ORM 、各種ライブラリ、メッセージリソースの提供          |
 
-UI 層の公開処理は通常 JSP や Thymeleaf を用いて行いますが、本サンプルでは異なる種類のクライアント利用を想定して RESTfulAPI での API 提供のみをおこないます。 ( 利用クライアントは別途用意する必要があります )
+UI 層の公開実装は通常 JSP や Thymeleaf を用いて行いますが、本サンプルでは異なる種類のクライアント利用を想定して RESTfulAPI での API 提供のみをおこないます。 ( 利用クライアントは別途用意する必要があります )
 
 #### Spring Boot の利用方針
 
 Spring Boot は様々な利用方法が可能ですが、本サンプルでは以下のポリシーで利用します。
 
 - 設定ファイルは yml を用いる。 Bean 定義に xml 等の拡張ファイルは用いない。
-- ライブラリ化しないので @Bean による将来拡張性を考慮せずにクラス単位で Bean ベタ登録。
+- ライブラリ化しないので @Bean による将来拡張性を考慮せずにクラス単位の Bean ベタ登録を許容。
 - 例外処理は終端 ( RestErrorAdvice / RestErrorCotroller ) で定義。 whitelabel 機能は無効化。
 - ORM 実装として Hibernate に特化。
 - Spring Security の認証方式はベーシック認証でなく、昔からよくある HttpSession で。
@@ -59,21 +57,25 @@ Java8 以上を前提としていますが、従来の Java で推奨される�
 Gradle のマルチプロジェクト構成をとっています。
 
 ```
-- build.gradle                        … Gradle プロジェクト定義
-- settings.gradle                     … Gradle プロジェクト設定
 gradle                                … Gradle 実行バイナリ
 micro-app                             … アプリケーションプロセス ( ドメイン API )
+  libs                                … 商用ライブラリ等
+  src                                 … アプリケーションコード
   - build.gradle                      … サブプロジェクト固有のプロジェクト定義
 micro-core                            … 共通ライブラリプロジェクト
 micro-registry                        … レジストリプロセス ( Eureka Server )
 micro-web                             … Web フロントプロセス ( UI向け公開 API )
+- build.gradle                        … Gradle プロジェクト定義
+- settings.gradle                     … Gradle プロジェクト設定
 ```
 
-- `micro-web -> micro-app` なシンプル構成です。
-- 本サンプルでは micro-web は外部公開する前提のプロセス、それ以外は ( 信頼できる ) 内部に閉じたプロセスとして考えます。
-- 本サンプルではプロセス間で共有する DB として micro-registry にメモリDB ( H2 ) を立ち上げています。
+- `micro-app` / `micro-web` は `micro-core` に依存しています。
+- UI からの要求が `micro-web -> micro-app` で処理されるシンプルな構成です。
+- 本サンプルにおいて `micro-web` は外部公開する前提のプロセス、それ以外は ( 信頼できる ) 内部に閉じたプロセスとして考えます。
+- プロセス間で共有する DB として、テスト環境では `micro-registry` にメモリDB ( H2 ) を立ち上げています。
+    - そのため最初に `micro-registry` の起動が必要となります。
 
-> ドメイン別にマイクロサービスを分離していく必要がある時は micro-app プロジェクトをドメイン単位のプロジェクトへ分解していきます。
+> ドメイン別にマイクロサービスを分離していく必要がある時は micro-app プロジェクトをドメイン単位のプロジェクトへと分解していきます。
 
 #### パッケージ構成
 
@@ -83,7 +85,7 @@ micro-web                             … Web フロントプロセス ( UI向�
 main
   java
     sample
-      api                             … プロセス間で共有される API 定義
+      api                             … プロセス間で利用される API
       context                         … インフラ層
       controller                      … UI 層
       model                           … ドメイン層
@@ -130,9 +132,9 @@ main
 1. パッケージエクスプローラから 「 右クリック -> Import -> Project 」 で *Gradle Project* を選択して *Next* を押下
 1. *Project root directory* にダウンロードした *sample-boot-micro* ディレクトリを指定して *Next* を押下
 1. *Import Options* で *Next* を押下
-1. *Gradle project structure* でプロジェクトを選択後に *Finish* を押下 ( 依存ライブラリダウンロードがここで行われます )
+1. *Gradle project structure* でプロジェクトを確認後に *Finish* を押下 ( 依存ライブラリダウンロードがここで行われます )
 
-> Pivotal 版の時は最初に Build Model ボタンを押下する事を忘れないでください
+> Pivotal 版を利用する際ははじめに Build Model ボタンを押下する事を忘れないでください
 
 次の手順で本サンプルを実行してください。
 
@@ -160,7 +162,7 @@ Windows / Mac のコンソールから実行するには Gradle のコンソー�
 
 #### クライアント検証
 
-Eclipse またはコンソールでサーバを立ち上げた後、 test パッケージ配下にある `SampleClient` の各検証メソッドをユニットテストで実行してください。
+Eclipse またはコンソールでサーバを立ち上げた後、 test パッケージ配下にある `SampleClient.java` の各検証メソッドをユニットテストで実行してください。
 
 ##### 顧客向けユースケース
 
@@ -194,12 +196,10 @@ Eclipse またはコンソールでサーバを立ち上げた後、 test パッ
 Spring Boot では Executable Jar ( ライブラリや静的リソースなども内包する jar ) を作成する事で単一の配布ファイルでアプリケーションを実行することができます。
 
 1. コンソールから 「 gradlew build 」 を実行
-1. `build/libs` 直下に jar が出力されるので Java8 以降の実行環境へ配布
+1. サブプロジェクトの `build/libs` 直下に jar が出力されるので Java8 以降の実行環境へ配布
 1. 実行環境でコンソールから 「 java -jar xxx.jar 」 を実行して起動
 
 *※実行引数に 「 --spring.profiles.active=[プロファイル名]」 を追加する事で application.yml の設定値を変更できます。*
-
-> マルチプロジェクト構成の時は `[root]/[project]/build/libs` 直下に jar が出力されます。
 
 ### 依存ライブラリ
 
@@ -221,7 +221,7 @@ Spring Boot では Executable Jar ( ライブラリや静的リソースなど�
 
 インフラ層の簡単な解説です。
 
-*※細かい概要は実際にコードを読むか、 「 `gradlew javadoc` 」 を実行して 「 `build/docs` 」 に出力されるドキュメントを参照してください*
+*※細かい概要は実際にコードを読むか、 「 `gradlew javadoc` 」 を実行して 「 `[subproject]/build/docs` 」 に出力されるドキュメントを参照してください*
 
 #### DB / トランザクション
 
@@ -236,9 +236,9 @@ JPA 標準の機能だけでは十分ではないケースがあるため、 Hib
 
 `sample.context.security` 直下。顧客 ( ROLE_USER ) / 社員 ( ROLE_ADMIN ) の 2 パターンを想定しています。それぞれのユーザ情報 ( UserDetails ) 提供手段は `sample.usecase.SecurityService` において定義しています。
 
-認証 / 認可の機能を有効にするには `application.yml` の `extension.security.auth.enabled` に `true` を設定してください ( 標準ではテスト用途にfalse ) 。顧客 / 社員それぞれ同一 VM での相乗りは考えていません。社員専用モードで起動する時は起動時のプロファイル切り替え等で `extension.security.auth.admin` を `true` に設定してください。
+認証 / 認可の機能を有効にするには `application-web.yml` の `extension.security.auth.enabled` に `true` を設定してください ( 標準ではテスト用途にfalse ) 。顧客 / 社員それぞれ同一 VM での相乗りは考えていません。社員専用モードで起動する時は起動時のプロファイル切り替え等で `extension.security.auth.admin` を `true` に設定してください。
 
-> 本サンプルでは外部公開している micro-web のみ設定を有効にしています。
+> 本サンプルでは外部公開フロントである micro-web のみを設定対象として考えています。
 
 #### 利用者監査
 
@@ -255,12 +255,20 @@ JPA 標準の機能だけでは十分ではないケースがあるため、 Hib
 
 #### キャッシング
 
-`AccountService` 等で Spring が提供する @Cacheable を利用しています。 UI 層かアプリケーション層のどちらかに統一した方が良いですが、本サンプルではアプリケーション層だけ付与しています。 Hibernate の 2nd / Query キャッシュは Entity 内で必要になる以外、利用しないことを推奨します。
+`AccountService` 等で Spring が提供する @Cacheable を利用しています。 UI 層かアプリケーション層のどちらかに統一した方が良いですが、本サンプルではアプリケーション層だけ付与しています。  
+Hibernate の 2nd / Query キャッシュは Entity 内で必要になる以外、利用しないことを推奨します。
+
+#### リモーティング
+
+Eureka + Ribbon を利用して、シンプルに RestTemplate を用いています。  
+プロセス間で連携する API 定義を Facade という形で切り出し、投げ側 ( Invoker ) と受け側 ( Exporter ) に分けてそれぞれ実装しています。  
 
 #### テスト
 
 パターンとしては通常の Spring コンテナを用いる 2 パターン ( WebMock テスト / コンテナテスト ) と、 Hibernate だけに閉じた実行時間に優れたテスト ( Entity のみが対象 ) の合計 3 パターンで考えます。 （ それぞれ基底クラスは `WebTestSupport` / `UnitTestSupport` / `EntityTestSupport` ）  
 テスト対象に Service まで含めるてしまうと冗長なので、そこら辺のカバレッジはあまり頑張らずに必要なものだけとしています。
+
+> Spring へ依存してしまうテストについては、 Spring Boot 1.4 で大幅に見直す予定です。
 
 ### License
 
