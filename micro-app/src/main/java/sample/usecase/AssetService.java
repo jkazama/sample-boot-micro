@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import sample.context.actor.Actor;
 import sample.context.lock.IdLockHandler.LockType;
@@ -33,7 +32,6 @@ public class AssetService extends ServiceSupport {
      * low: CashInOutは情報過多ですがアプリケーション層では公開対象を特定しにくい事もあり、
      * UI層に最終判断を委ねています。
      */
-    @RequestMapping("/hello")
     public List<CashInOut> findUnprocessedCashOut() {
         final String accId = actor().getId();
         return tx(accId, LockType.Read, () -> {
