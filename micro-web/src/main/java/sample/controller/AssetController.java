@@ -1,6 +1,6 @@
 package sample.controller;
 
-import static sample.api.AssetFacade.*;
+import static sample.microasset.api.AssetFacade.*;
 
 import java.math.BigDecimal;
 import java.time.*;
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import lombok.Value;
 import sample.ActionStatusType;
-import sample.api.AssetFacade;
 import sample.context.Dto;
-import sample.model.asset.CashInOut;
-import sample.model.asset.CashInOut.RegCashOut;
+import sample.microasset.api.AssetFacade;
+import sample.microasset.model.asset.CashInOut;
+import sample.microasset.model.asset.CashInOut.RegCashOut;
 
 /**
  * 資産に関わる顧客のUI要求を処理します。

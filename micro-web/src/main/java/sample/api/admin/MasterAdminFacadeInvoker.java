@@ -17,7 +17,7 @@ import sample.model.master.Holiday.RegHoliday;
 @Component
 public class MasterAdminFacadeInvoker extends RestInvokerSupport implements MasterAdminFacade {
 
-    @Value("${extension.remoting.target}")
+    @Value("${extension.remoting.app}")
     String applicationName;
     
     /** {@inheritDoc} */

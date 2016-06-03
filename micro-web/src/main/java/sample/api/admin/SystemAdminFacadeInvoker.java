@@ -21,7 +21,7 @@ import sample.context.orm.PagingList;
 @Component
 public class SystemAdminFacadeInvoker extends RestInvokerSupport implements SystemAdminFacade {
 
-    @Value("${extension.remoting.target}")
+    @Value("${extension.remoting.app}")
     String applicationName;
     
     /** {@inheritDoc} */

@@ -1,6 +1,6 @@
 package sample.controller.admin;
 
-import static sample.api.admin.AssetAdminFacade.*;
+import static sample.microasset.api.admin.AssetAdminFacade.*;
 
 import java.util.List;
 
@@ -9,10 +9,10 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import sample.api.admin.AssetAdminFacade;
 import sample.controller.ControllerSupport;
-import sample.model.asset.CashInOut;
-import sample.model.asset.CashInOut.FindCashInOut;
+import sample.microasset.api.admin.AssetAdminFacade;
+import sample.microasset.model.asset.CashInOut;
+import sample.microasset.model.asset.CashInOut.FindCashInOut;
 
 /**
  * 資産に関わる社内のUI要求を処理します。

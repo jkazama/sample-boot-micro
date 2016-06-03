@@ -9,14 +9,18 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.*;
 
-import sample.api.MasterFacadeExporter;
+import sample.api.RestInvokerSupport;
 import sample.context.Timestamper;
 import sample.context.actor.ActorSession;
 import sample.context.orm.DefaultRepository;
 import sample.context.rest.RestActorSessionBindFilter;
+import sample.microasset.api.AssetFacadeExporter;
+import sample.microasset.context.orm.*;
+import sample.microasset.model.AssetDataFixtures;
+import sample.microasset.usecase.AssetService;
 import sample.model.*;
 import sample.model.BusinessDayHandler.HolidayAccessor;
-import sample.usecase.AccountService;
+import sample.usecase.ServiceSupport;
 
 /**
  * アプリケーションプロセスの起動クラス。
@@ -30,15 +34,16 @@ import sample.usecase.AccountService;
  * </ul>
  */
 @SpringBootApplication(scanBasePackageClasses = {
-    Timestamper.class, AccountService.class, MasterFacadeExporter.class })
-@Import(ApplicationConfig.class)
+    Timestamper.class, ServiceSupport.class, RestInvokerSupport.class,
+    AssetService.class, AssetFacadeExporter.class })
+@Import({ ApplicationConfig.class, AssetRepository.class })
 @EnableCaching(proxyTargetClass = true)
 @EnableDiscoveryClient
-public class MicroApp {
+public class MicroAsset {
     
     public static void main(String[] args) {
-        new SpringApplicationBuilder(MicroApp.class)
-            .profiles("app")
+        new SpringApplicationBuilder(MicroAsset.class)
+            .profiles("asset")
             .run(args);
     }
     
@@ -49,8 +54,8 @@ public class MicroApp {
         /** データ生成ユーティリティ */
         @Bean
         @ConditionalOnProperty(prefix = DataFixtures.Prefix, name = "enabled", matchIfMissing = false)
-        DataFixtures fixtures() {
-            return new DataFixtures();
+        AssetDataFixtures fixtures() {
+            return new AssetDataFixtures();
         }
         
         /** 休日情報アクセサ */

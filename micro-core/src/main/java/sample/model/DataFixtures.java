@@ -1,7 +1,6 @@
 package sample.model;
 
-import java.math.BigDecimal;
-import java.time.*;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -13,16 +12,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import lombok.Setter;
-import sample.ActionStatusType;
 import sample.context.*;
 import sample.context.orm.*;
 import sample.model.account.*;
 import sample.model.account.type.AccountStatusType;
-import sample.model.asset.*;
-import sample.model.asset.Cashflow.RegCashflow;
-import sample.model.asset.type.CashflowType;
 import sample.model.master.*;
-import sample.util.*;
+import sample.util.DateUtils;
 
 /**
  * データ生成用のサポートコンポーネント。
@@ -33,10 +28,6 @@ public class DataFixtures {
     
     public static final String Prefix = "extension.datafixture";
 
-    @Autowired
-    private Timestamper time;
-    @Autowired
-    private BusinessDayHandler businessDay;
     @Autowired
     private PasswordEncoder encoder;
     @Autowired
@@ -69,20 +60,18 @@ public class DataFixtures {
 
     public void initializeInTx() {
         String ccy = "JPY";
-        LocalDate baseDay = businessDay.day();
 
         // 社員: admin (passも同様)
         staff("admin").save(rep);
 
         // 自社金融機関
-        selfFiAcc(Remarks.CashOut, ccy).save(rep);
+        selfFiAcc("cashOut", ccy).save(rep);
 
         // 口座: sample (passも同様)
         String idSample = "sample";
         acc(idSample).save(rep);
         login(idSample).save(rep);
-        fiAcc(idSample, Remarks.CashOut, ccy).save(rep);
-        cb(idSample, baseDay, ccy, "1000000").save(rep);
+        fiAcc(idSample, "cashOut", ccy).save(rep);
     }
 
     // account
@@ -113,43 +102,6 @@ public class DataFixtures {
         m.setCurrency(currency);
         m.setFiCode(category + "-" + currency);
         m.setFiAccountId("FI" + accountId);
-        return m;
-    }
-
-    // asset
-
-    /** 口座残高の簡易生成 */
-    public CashBalance cb(String accountId, LocalDate baseDay, String currency, String amount) {
-        return new CashBalance(null, accountId, baseDay, currency, new BigDecimal(amount), LocalDateTime.now());
-    }
-
-    /** キャッシュフローの簡易生成 */
-    public Cashflow cf(String accountId, String amount, LocalDate eventDay, LocalDate valueDay) {
-        return cfReg(accountId, amount, valueDay).create(TimePoint.of(eventDay));
-    }
-
-    /** キャッシュフロー登録パラメタの簡易生成 */
-    public RegCashflow cfReg(String accountId, String amount, LocalDate valueDay) {
-        return new RegCashflow(accountId, "JPY", new BigDecimal(amount), CashflowType.CashIn, "cashIn", null, valueDay);
-    }
-
-    /** 振込入出金依頼の簡易生成 [発生日(T+1)/受渡日(T+3)] */
-    public CashInOut cio(String accountId, String absAmount, boolean withdrawal) {
-        TimePoint now = time.tp();
-        CashInOut m = new CashInOut();
-        m.setAccountId(accountId);
-        m.setCurrency("JPY");
-        m.setAbsAmount(new BigDecimal(absAmount));
-        m.setWithdrawal(withdrawal);
-        m.setRequestDay(now.getDay());
-        m.setRequestDate(now.getDate());
-        m.setEventDay(businessDay.day(1));
-        m.setValueDay(businessDay.day(3));
-        m.setTargetFiCode("tFiCode");
-        m.setTargetFiAccountId("tFiAccId");
-        m.setSelfFiCode("sFiCode");
-        m.setSelfFiAccountId("sFiAccId");
-        m.setStatusType(ActionStatusType.Unprocessed);
         return m;
     }
 

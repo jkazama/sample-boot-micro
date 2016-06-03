@@ -61,7 +61,7 @@ gradle                                … Gradle 実行バイナリ
 micro-app                             … アプリケーションプロセス ( ドメイン API )
   libs                                … 商用ライブラリ等
   src                                 … アプリケーションコード
-  - build.gradle                      … サブプロジェクト固有のプロジェクト定義
+micro-asset                           … アプリケーションプロセス ( 資産ドメイン API )
 micro-core                            … 共通ライブラリプロジェクト
 micro-registry                        … レジストリプロセス ( Eureka Server )
 micro-web                             … Web フロントプロセス ( UI向け公開 API )
@@ -70,7 +70,7 @@ micro-web                             … Web フロントプロセス ( UI向�
 ```
 
 - `micro-app` / `micro-web` は `micro-core` に依存しています。
-- UI からの要求が `micro-web -> micro-app` で処理されるシンプルな構成です。
+- UI からの要求が `micro-web -> micro-app` / `micro-web -> micro-asset` で処理されるシンプルな構成です。
 - 本サンプルにおいて `micro-web` は外部公開する前提のプロセス、それ以外は ( 信頼できる ) 内部に閉じたプロセスとして考えます。
 - プロセス間で共有する DB として、テスト環境では `micro-registry` にメモリDB ( H2 ) を立ち上げています。
     - そのため最初に `micro-registry` の起動が必要となります。
@@ -144,6 +144,9 @@ main
 1. *MicroApp.java* に対し 「 右クリック -> Run As -> Java Application 」
 1. *Console* タブに 「 Started Application 」 という文字列が出力されればポート 8090 で起動が完了
 1. ブラウザを立ち上げて 「 http://localhost:8090/api/management/health 」 で状態を確認
+1. *MicroAsset.java* に対し 「 右クリック -> Run As -> Java Application 」
+1. *Console* タブに 「 Started Application 」 という文字列が出力されればポート 8100 で起動が完了
+1. ブラウザを立ち上げて 「 http://localhost:8090/api/management/health 」 で状態を確認
 1. *MicroWeb.java* に対し 「 右クリック -> Run As -> Java Application 」
 1. *Console* タブに 「 Started Application 」 という文字列が出力されればポート 8080 で起動が完了
 1. ブラウザを立ち上げて 「 http://localhost:8080/api/management/health 」 で状態を確認
@@ -157,6 +160,7 @@ Windows / Mac のコンソールから実行するには Gradle のコンソー�
 1. ダウンロードした *sample-boot-micro* ディレクトリ直下へコンソールで移動
 1. 「 gradlew :micro-registry:bootRun 」 を実行
 1. 別コンソールで 「 gradlew :micro-app:bootRun 」 を実行
+1. 別コンソールで 「 gradlew :micro-asset:bootRun 」 を実行
 1. 別コンソールで 「 gradlew :micro-web:bootRun 」 を実行
 1. ブラウザを立ち上げて 「 http://localhost:8080/api/management/health 」 で状態を確認
 

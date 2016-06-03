@@ -1,1 +1,1 @@
-include 'micro-core', 'micro-registry', 'micro-app', 'micro-web'
+include 'micro-core', 'micro-registry', 'micro-app', 'micro-asset', 'micro-web'
