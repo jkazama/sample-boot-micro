@@ -1,0 +1,3 @@
+bootRepackage {
+  mainClass = 'sample.MicroAsset'
+}

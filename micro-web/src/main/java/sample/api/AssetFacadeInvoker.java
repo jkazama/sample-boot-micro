@@ -7,8 +7,9 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import sample.model.asset.CashInOut;
-import sample.model.asset.CashInOut.RegCashOut;
+import sample.microasset.api.AssetFacade;
+import sample.microasset.model.asset.CashInOut;
+import sample.microasset.model.asset.CashInOut.RegCashOut;
 
 /**
  * 資産系ユースケースの API 実行処理を表現します。
@@ -16,7 +17,7 @@ import sample.model.asset.CashInOut.RegCashOut;
 @Component
 public class AssetFacadeInvoker extends RestInvokerSupport implements AssetFacade {
 
-    @Value("${extension.remoting.target}")
+    @Value("${extension.remoting.asset}")
     private String applicationName;
     
     /** {@inheritDoc} */

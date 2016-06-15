@@ -1,5 +1,6 @@
 buildscript {
   ext {
+    springCloudVersion = 'Brixton.SR1'
     springBootVersion = '1.3.5.RELEASE'
     hibernateVersion = '5.1.0.Final'
   }
@@ -41,7 +42,7 @@ subprojects {
 
   dependencyManagement {
     imports {
-      mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Brixton.RELEASE'
+      mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
       mavenBom "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
     }
   }
@@ -81,12 +82,19 @@ project(':micro-app') {
     }
 }
 
-project(':micro-web') {
+project(':micro-asset') {
     dependencies {
         compile project(':micro-core')
     }
 }
 
+project(':micro-web') {
+    dependencies {
+        compile project(':micro-core')
+        compile project(':micro-asset')
+    }
+}
+
 task wrapper(type: Wrapper) {
-    gradleVersion = "2.13"
+    gradleVersion = "2.14"
 }

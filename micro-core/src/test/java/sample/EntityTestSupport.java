@@ -117,8 +117,6 @@ public class EntityTestSupport {
 
     protected void setupDataFixtures() {
         fixtures = new DataFixtures();
-        fixtures.setTime(time);
-        fixtures.setBusinessDay(businessDay);
         fixtures.setEncoder(encoder);
         fixtures.setRep(rep);
         fixtures.setTx(txm);
