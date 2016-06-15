@@ -23,7 +23,7 @@ import sample.model.BusinessDayHandler.HolidayAccessor;
 import sample.usecase.ServiceSupport;
 
 /**
- * アプリケーションプロセスの起動クラス。
+ * 資産アプリケーションプロセスの起動クラス。
  * <p>本クラスを実行する事でSpringBootが提供する組込Tomcatでのアプリケーション起動が行われます。
  * <p>自動的に Eureka Server へ登録されます。
  * <p>自動設定対象として以下のパッケージをスキャンしています。
@@ -31,6 +31,8 @@ import sample.usecase.ServiceSupport;
  * <li>sample.context
  * <li>sample.usecase
  * <li>sample.api
+ * <li>sample.microasset.usecase
+ * <li>sample.microasset.api
  * </ul>
  */
 @SpringBootApplication(scanBasePackageClasses = {

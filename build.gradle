@@ -1,5 +1,6 @@
 buildscript {
   ext {
+    springCloudVersion = 'Brixton.SR1'
     springBootVersion = '1.3.5.RELEASE'
     hibernateVersion = '5.1.0.Final'
   }
@@ -41,7 +42,7 @@ subprojects {
 
   dependencyManagement {
     imports {
-      mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Brixton.RELEASE'
+      mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
       mavenBom "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
     }
   }
