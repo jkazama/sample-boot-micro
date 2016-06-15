@@ -16,7 +16,9 @@ extension:
       admin: false
     cors.enabled: true
   mail.enabled: false
-  remoting.target: micro-app
+  remoting:
+    app: micro-app
+    asset: micro-asset
 
 ---
 spring:

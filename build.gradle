@@ -81,9 +81,16 @@ project(':micro-app') {
     }
 }
 
+project(':micro-asset') {
+    dependencies {
+        compile project(':micro-core')
+    }
+}
+
 project(':micro-web') {
     dependencies {
         compile project(':micro-core')
+        compile project(':micro-asset')
     }
 }
 

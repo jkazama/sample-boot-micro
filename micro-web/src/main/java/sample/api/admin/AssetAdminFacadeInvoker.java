@@ -8,8 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import sample.api.RestInvokerSupport;
-import sample.model.asset.CashInOut;
-import sample.model.asset.CashInOut.FindCashInOut;
+import sample.microasset.api.admin.AssetAdminFacade;
+import sample.microasset.model.asset.CashInOut;
+import sample.microasset.model.asset.CashInOut.FindCashInOut;
 
 /**
  * 資産系社内ユースケースの API 実行処理を表現します。
@@ -17,7 +18,7 @@ import sample.model.asset.CashInOut.FindCashInOut;
 @Component
 public class AssetAdminFacadeInvoker extends RestInvokerSupport implements AssetAdminFacade {
 
-    @Value("${extension.remoting.target}")
+    @Value("${extension.remoting.asset}")
     String applicationName;
     
     /** {@inheritDoc} */

@@ -1,0 +1,24 @@
+---
+spring:
+  profiles: asset
+  application.name: micro-asset
+
+server:
+  port: 8100
+
+extension:
+  datasource:
+    asset:
+      driver-class-name: org.h2.Driver
+      url: jdbc:h2:tcp://localhost:9092/mem:asset
+      username:
+      password:
+  hibernate:
+    asset:
+      dialect: org.hibernate.dialect.H2Dialect
+      packageToScan: sample.microasset.model.asset
+      showSql: true
+      createDrop: true
+  datafixture.enabled: true
+
+ 

@@ -4,8 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import sample.api.admin.*;
+import sample.api.admin.SystemAdminFacade;
 import sample.controller.ControllerSupport;
+import sample.microasset.api.admin.*;
 
 /**
  * システムジョブのUI要求を処理します。

@@ -19,6 +19,8 @@ import sample.context.*;
 import sample.context.actor.ActorSession;
 import sample.context.orm.*;
 import sample.context.orm.DefaultRepository.DefaultRepositoryConfig;
+import sample.microasset.context.orm.*;
+import sample.microasset.model.AssetDataFixtures;
 import sample.model.*;
 import sample.support.MockDomainHelper;
 
@@ -38,7 +40,10 @@ public class EntityTestSupport {
     protected PlatformTransactionManager txm;
     protected SystemRepository repSystem;
     protected PlatformTransactionManager txmSystem;
+    protected AssetRepository repAsset;
+    protected PlatformTransactionManager txmAsset;
     protected DataFixtures fixtures;
+    protected AssetDataFixtures fixturesAsset;
 
     /** テスト対象とするパッケージパス(通常はtargetEntitiesの定義を推奨) */
     private String packageToScan = "sample";
@@ -113,6 +118,9 @@ public class EntityTestSupport {
         repSystem = new SystemRepository();
         repSystem.setDh(dh);
         repSystem.setSessionFactory(sf);
+        repAsset = new AssetRepository();
+        repAsset.setDh(dh);
+        repAsset.setSessionFactory(sf);
     }
 
     protected void setupDataFixtures() {
@@ -122,6 +130,12 @@ public class EntityTestSupport {
         fixtures.setTx(txm);
         fixtures.setRepSystem(repSystem);
         fixtures.setTxSystem(txmSystem);
+        
+        fixturesAsset = new AssetDataFixtures();
+        fixturesAsset.setTime(time);
+        fixturesAsset.setBusinessDay(businessDay);
+        fixturesAsset.setRep(repAsset);
+        fixturesAsset.setTx(txmAsset);
     }
 
     private SessionFactory createSessionFactory() {
@@ -146,6 +160,7 @@ public class EntityTestSupport {
         sf = sfBean.getObject();
         txm = config.transactionManager(sf);
         txmSystem = config.transactionManager(sf);
+        txmAsset = config.transactionManager(sf);
         return sf;
     }
 
@@ -200,6 +215,24 @@ public class EntityTestSupport {
 
     public void txSystem(Runnable command) {
         txSystem(() -> {
+            command.run();
+            return true;
+        });
+    }
+    
+    /** トランザクション処理を行います。(Asset) */
+    public <T> T txAsset(Supplier<T> callable) {
+        return new TransactionTemplate(txmAsset).execute((status) -> {
+            T ret = callable.get();
+            if (ret instanceof Entity) {
+                ret.hashCode(); // for lazy loading
+            }
+            return ret;
+        });
+    }
+
+    public void txAsset(Runnable command) {
+        txAsset(() -> {
             command.run();
             return true;
         });
