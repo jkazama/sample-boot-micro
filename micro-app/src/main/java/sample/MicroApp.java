@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.*;
 
+import de.codecentric.boot.admin.config.EnableAdminServer;
 import sample.api.MasterFacadeExporter;
 import sample.context.Timestamper;
 import sample.context.actor.ActorSession;
@@ -34,6 +35,7 @@ import sample.usecase.AccountService;
 @Import(ApplicationConfig.class)
 @EnableCaching(proxyTargetClass = true)
 @EnableDiscoveryClient
+@EnableAdminServer
 public class MicroApp {
     
     public static void main(String[] args) {

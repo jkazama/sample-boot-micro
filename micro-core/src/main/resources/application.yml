@@ -5,6 +5,7 @@ spring:
   autoconfigure.exclude:
     - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
     - org.springframework.boot.devtools.autoconfigure.DevToolsDataSourceAutoConfiguration
+    - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
   messages.basename: messages-validation, messages
   main.show-banner: false 
   jackson:
