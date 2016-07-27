@@ -35,9 +35,10 @@ UI 層の公開実装は通常 JSP や Thymeleaf を用いて行いますが、�
 Spring Boot は様々な利用方法が可能ですが、本サンプルでは以下のポリシーで利用します。
 
 - 設定ファイルは yml を用いる。 Bean 定義に xml 等の拡張ファイルは用いない。
-- ライブラリ化しないので @Bean による将来拡張性を考慮せずにクラス単位の Bean ベタ登録を許容。
+- インフラ層のコンポーネントは @Bean で、 それ以外のコンポーネントは @Component 等でベタに登録していく。
+    - `ApplicationConfig` / `ApplicationDbConfig` / `ApplicationSecurityConfig`
 - 例外処理は終端 ( RestErrorAdvice / RestErrorCotroller ) で定義。 whitelabel 機能は無効化。
-- ORM 実装として Hibernate に特化。
+- JPA 実装として Hibernate に特化。
 - Spring Security の認証方式はベーシック認証でなく、昔からよくある HttpSession で。
 - 基礎的なユーティリティで Spring がサポートしていないのは簡易な実装を用意。
 
@@ -156,6 +157,8 @@ main
 1. *Console* タブに 「 Started Application 」 という文字列が出力されればポート 8080 で起動が完了
 1. ブラウザを立ち上げて 「 http://localhost:8080/api/management/health 」 で状態を確認
 
+> STS (Spring Tool Suite) のプラグインを利用すると上記 main クラスを GUI の Boot Dashboard 経由で簡単に実行できます。
+
 #### サーバ起動 （ コンソール ）
 
 Windows / Mac のコンソールから実行するには Gradle のコンソールコマンドで行います。  
@@ -208,38 +211,37 @@ Spring Boot では Executable Jar ( ライブラリや静的リソースなど�
 1. サブプロジェクトの `build/libs` 直下に jar が出力されるので Java8 以降の実行環境へ配布
 1. 実行環境でコンソールから 「 java -jar xxx.jar 」 を実行して起動
 
-*※実行引数に 「 --spring.profiles.active=[プロファイル名]」 を追加する事で application.yml の設定値を変更できます。*
+> 実行引数に 「 --spring.profiles.active=[プロファイル名]」 を追加する事で application.yml の設定値を変更できます。
 
 ### 依存ライブラリ
 
 | ライブラリ               | バージョン | 用途/追加理由 |
 | ----------------------- | -------- | ------------- |
 | `spring-cloud`          | Brixton.RELEASE | Spring Cloud 基盤 |
-| `spring-boot-starter-*` | 1.3.5    | Spring Boot 基盤 (actuator/security/aop/cache/web) |
-| `spring-orm`            | 4.2.6    | Spring4 の ORM 概念サポート |
-| `hibernate-*`           | 5.1.0    | DB 永続化サポート (core/java8/ehcache) |
-| `ehcache-core`          | 2.6.+    | 最新の EhCache 設定記法を利用するため |
+| `spring-boot-starter-*` | 1.3.5    | Spring Boot 基盤 (actuator/security/aop/cache/data-jpa/web) |
+| `hibernate-*`           | 5.0.9    | DB 永続化サポート (core/java8) |
+| `ehcache`               | 3.1.+    | JCache 実装 |
 | `HikariCP`              | 2.3.+    | コネクションプーリング実装の組み立て用途 |
 | `jackson-datatype-*`    | 2.6.+    | JSON 変換時の Java8 / Hibernate 対応 |
 | `commons-*`             | -        | 汎用ユーティリティライブラリ |
 | `icu4j-*`               | 54.1.+   | 文字変換ライブラリ |
 
-*※実際の詳細な定義は `build.gradle` を参照してください*
+> 実際の詳細な定義は `build.gradle` を参照してください
 
 ### 補足解説（インフラ層）
 
 インフラ層の簡単な解説です。
 
-*※細かい概要は実際にコードを読むか、 「 `gradlew javadoc` 」 を実行して 「 `[subproject]/build/docs` 」 に出力されるドキュメントを参照してください*
+※細かい概要は実際にコードを読むか、 「 `gradlew javadoc` 」 を実行して 「 `[subproject]/build/docs` 」 に出力されるドキュメントを参照してください
 
 #### DB / トランザクション
 
-`sample.context.orm` 直下。ドメイン実装をより Entity に寄せるための ORM サポート実装です。 Repository ( スキーマ単位で定義 ) にドメイン処理を記載しないアプローチのため、 Spring Boot が提供する JPA 実装は利用していません。  
+`sample.context.orm` 直下。ドメイン実装をより Entity に寄せるための ORM サポート実装です。 Repository ( スキーマ単位で定義 ) にドメイン処理を記載しないアプローチのため、 Spring Boot が提供する JpaRepository は利用していません。  
 トランザクション定義はトラブルの種となるのでアプリケーション層でのみ許し、なるべく狭く限定した形で付与しています。単純な readOnly な処理のみ `@Transactional([Bean名称])` を利用してメソッド単位の対応を取ります。
 
 スキーマは標準のビジネスロジック用途 ( `DefaultRepository` ) とシステム用途 ( `SystemRepository` ) の2種類を想定しています。 Entity 実装ではスキーマに依存させず、引数に渡す側 ( 主にアプリケーション層 ) で判断させます。
 
-JPA 標準の機能だけでは十分ではないケースがあるため、 HibernateORM 依存を明確にして Hibernate 固有機能を利用できるようにしています。
+> Spring Data JPA が提供する JpaRepository を利用することも可能です。 ( 標準で DefaultRepository が管理しているスキーマへ接続します )
 
 #### 認証/認可
 
