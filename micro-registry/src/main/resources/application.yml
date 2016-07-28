@@ -4,13 +4,13 @@ spring:
   aop.proxy-target-class: true
   autoconfigure.exclude:
     - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-    - org.springframework.boot.devtools.autoconfigure.DevToolsDataSourceAutoConfiguration
     - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
-  main.show-banner: false 
   jackson:
     serialization:
-      indent_output: true
-      write_dates_as_timestamps: false
+      indent-output: true
+      write-dates-as-timestamps: false
+
+banner.location: banner.txt
 
 server:
   port: 8761
@@ -26,13 +26,13 @@ management:
 eureka:
   instance:
     hostname: localhost
-    leaseRenewalIntervalInSeconds: 5
-    statusPageUrlPath: ${management.context-path}/info
-    healthCheckUrlPath: ${management.context-path}/health
-    preferIpAddress: true
+    lease-renewal-interval-in-seconds: 5
+    status-page-url-path: ${management.context-path}/info
+    health-check-url-path: ${management.context-path}/health
+    prefer-ip-address: true
   client:
-    registerWithEureka: false
-    fetchRegistry: false
+    register-with-eureka: false
+    fetch-registry: false
 
 extension.test.db.enabled: true
 

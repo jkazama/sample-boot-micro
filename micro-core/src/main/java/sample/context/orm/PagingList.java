@@ -1,8 +1,8 @@
 package sample.context.orm;
 
-import java.util.*;
+import java.util.List;
 
-import lombok.Getter;
+import lombok.Value;
 import sample.context.Dto;
 
 /**
@@ -10,20 +10,11 @@ import sample.context.Dto;
  * 
  * @param <T> 結果オブジェクト(一覧の要素)
  */
-@Getter
+@Value
 public class PagingList<T> implements Dto {
     private static final long serialVersionUID = 1L;
 
-    public PagingList() {
-        this(new ArrayList<>(), new Pagination());
-    }
-    
-    public PagingList(List<T> list, Pagination page) {
-        this.list = list;
-        this.page = page;
-    }
-    
     private List<T> list;
     private Pagination page;
-    
+
 }

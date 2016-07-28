@@ -15,9 +15,8 @@ import sample.ValidationException;
 import sample.ValidationException.ErrorKeys;
 import sample.api.admin.MasterAdminFacade;
 import sample.context.actor.Actor;
-import sample.context.security.SecurityActorFinder;
+import sample.context.security.*;
 import sample.context.security.SecurityActorFinder.ActorDetails;
-import sample.context.security.SecurityConfig.SecurityProperties;
 import sample.controller.ControllerSupport;
 import sample.model.master.Holiday.RegHoliday;
 
@@ -41,7 +40,7 @@ public class MasterAdminController extends ControllerSupport {
     }
 
     /** 社員ログイン情報を取得します。 */
-    @RequestMapping("/loginStaff")
+    @GetMapping("/loginStaff")
     public LoginStaff loadLoginStaff() {
         if (securityProps.auth().isEnabled()) {
             ActorDetails actorDetails = SecurityActorFinder.actorDetails()
@@ -64,7 +63,7 @@ public class MasterAdminController extends ControllerSupport {
     }
 
     /** 休日を登録します。 */
-    @RequestMapping(value = PathRegisterHoliday, method = RequestMethod.POST)
+    @PostMapping(PathRegisterHoliday)
     public ResponseEntity<Void> registerHoliday(@Valid RegHoliday p) {
         return facade.registerHoliday(p);
     }

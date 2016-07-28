@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sample.ValidationException.ErrorKeys;
 import sample.context.orm.DefaultRepository;
 import sample.context.security.SecurityActorFinder.*;
-import sample.context.security.SecurityAuthConfig;
+import sample.context.security.SecurityConfigurer;
 import sample.model.account.*;
 import sample.model.master.*;
 import sample.util.ConvertUtils;
@@ -23,7 +23,7 @@ import sample.util.ConvertUtils;
  * SpringSecurityのユーザアクセスコンポーネントを定義します。
  */
 @Configuration
-@ConditionalOnBean(SecurityAuthConfig.class)
+@ConditionalOnBean(SecurityConfigurer.class)
 public class SecurityService {
 
     /** 一般利用者情報を提供します。(see SecurityActorFinder) */

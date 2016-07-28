@@ -9,7 +9,7 @@ server:
   port: 8090
 
 extension:
-  hibernate:
-    default.createDrop: true
-    system.createDrop: true
+  datasource:
+    default.jpa.hibernate.ddl-auto: create-drop
+    system.jpa.hibernate.ddl-auto: create-drop
   datafixture.enabled: true

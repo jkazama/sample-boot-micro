@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.cache.annotation.*;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import sample.util.DateUtils;
 /**
  * ドメインに依存する営業日関連のユーティリティハンドラ。
  */
+@Component
 @AllArgsConstructor
 public class BusinessDayHandler {
     private Timestamper time;
@@ -63,6 +65,7 @@ public class BusinessDayHandler {
     }
 
     /** 祝日マスタを検索/登録するアクセサ。 */
+    @Component
     @AllArgsConstructor
     public static class HolidayAccessor {
         private DefaultRepository rep;

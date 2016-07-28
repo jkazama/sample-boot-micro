@@ -31,7 +31,7 @@ public class AssetController extends ControllerSupport {
     AssetFacade facade;
     
     /** 未処理の振込依頼情報を検索します。 */
-    @RequestMapping(PathFindUnprocessedCashOut)
+    @GetMapping(PathFindUnprocessedCashOut)
     public List<CashOutUI> findUnprocessedCashOut() {
         return facade.findUnprocessedCashOut().stream()
                 .map((cio) -> CashOutUI.of(cio))
@@ -39,7 +39,7 @@ public class AssetController extends ControllerSupport {
     }
 
     /** 振込出金依頼をします。  */
-    @RequestMapping(value = PathWithdraw, method = RequestMethod.POST)
+    @PostMapping(PathWithdraw)
     public ResponseEntity<Long> withdraw(@Valid RegCashOut p) {
         return facade.withdraw(p);
     }

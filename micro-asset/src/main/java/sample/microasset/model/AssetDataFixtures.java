@@ -12,7 +12,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 import lombok.Setter;
 import sample.ActionStatusType;
 import sample.context.Timestamper;
-import sample.context.orm.DefaultRepository;
 import sample.microasset.context.orm.AssetRepository;
 import sample.microasset.model.asset.*;
 import sample.microasset.model.asset.Cashflow.RegCashflow;
@@ -30,7 +29,7 @@ public class AssetDataFixtures {
     @Autowired
     private AssetRepository rep;
     @Autowired
-    @Qualifier(DefaultRepository.BeanNameTx)
+    @Qualifier(AssetRepository.BeanNameTx)
     private PlatformTransactionManager tx;
     
     @PostConstruct

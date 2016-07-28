@@ -24,16 +24,16 @@ public class CashflowTest extends EntityTestSupport {
         LocalDate baseDay = businessDay.day();
         LocalDate baseMinus1Day = businessDay.day(-1);
         LocalDate basePlus1Day = businessDay.day(1);
-        txAsset(() -> {
+        tx(() -> {
             // 過去日付の受渡でキャッシュフロー発生 [例外]
             try {
-                Cashflow.register(repAsset, fixturesAsset.cfReg("test1", "1000", baseMinus1Day));
+                Cashflow.register(rep, fixturesAsset.cfReg("test1", "1000", baseMinus1Day));
                 fail();
             } catch (ValidationException e) {
                 assertThat(e.getMessage(), is(AssetErrorKeys.CashflowBeforeEqualsDay));
             }
             // 翌日受渡でキャッシュフロー発生
-            assertThat(Cashflow.register(repAsset, fixturesAsset.cfReg("test1", "1000", basePlus1Day)),
+            assertThat(Cashflow.register(rep, fixturesAsset.cfReg("test1", "1000", basePlus1Day)),
                     allOf(
                             hasProperty("amount", is(new BigDecimal("1000"))),
                             hasProperty("statusType", is(ActionStatusType.Unprocessed)),
@@ -48,22 +48,22 @@ public class CashflowTest extends EntityTestSupport {
         LocalDate baseMinus1Day = businessDay.day(-1);
         LocalDate baseMinus2Day = businessDay.day(-2);
         LocalDate basePlus1Day = businessDay.day(1);
-        txAsset(() -> {
-            CashBalance.getOrNew(repAsset, "test1", "JPY");
+        tx(() -> {
+            CashBalance.getOrNew(rep, "test1", "JPY");
 
             // 未到来の受渡日 [例外]
-            Cashflow cfFuture = fixturesAsset.cf("test1", "1000", baseDay, basePlus1Day).save(repAsset);
+            Cashflow cfFuture = fixturesAsset.cf("test1", "1000", baseDay, basePlus1Day).save(rep);
             try {
-                cfFuture.realize(repAsset);
+                cfFuture.realize(rep);
                 fail();
             } catch (ValidationException e) {
                 assertThat(e.getMessage(), is(AssetErrorKeys.CashflowRealizeDay));
             }
 
             // キャッシュフローの残高反映検証。  0 + 1000 = 1000
-            Cashflow cfNormal = fixturesAsset.cf("test1", "1000", baseMinus1Day, baseDay).save(repAsset);
-            assertThat(cfNormal.realize(repAsset), hasProperty("statusType", is(ActionStatusType.Processed)));
-            assertThat(CashBalance.getOrNew(repAsset, "test1", "JPY"),
+            Cashflow cfNormal = fixturesAsset.cf("test1", "1000", baseMinus1Day, baseDay).save(rep);
+            assertThat(cfNormal.realize(rep), hasProperty("statusType", is(ActionStatusType.Processed)));
+            assertThat(CashBalance.getOrNew(rep, "test1", "JPY"),
                     hasProperty("amount", is(new BigDecimal("1000"))));
 
             // 処理済キャッシュフローの再実現 [例外]
@@ -75,9 +75,9 @@ public class CashflowTest extends EntityTestSupport {
             }
 
             // 過日キャッシュフローの残高反映検証。 1000 + 2000 = 3000
-            Cashflow cfPast = fixturesAsset.cf("test1", "2000", baseMinus2Day, baseMinus1Day).save(repAsset);
-            assertThat(cfPast.realize(repAsset), hasProperty("statusType", is(ActionStatusType.Processed)));
-            assertThat(CashBalance.getOrNew(repAsset, "test1", "JPY"),
+            Cashflow cfPast = fixturesAsset.cf("test1", "2000", baseMinus2Day, baseMinus1Day).save(rep);
+            assertThat(cfPast.realize(rep), hasProperty("statusType", is(ActionStatusType.Processed)));
+            assertThat(CashBalance.getOrNew(rep, "test1", "JPY"),
                     hasProperty("amount", is(new BigDecimal("3000"))));
         });
     }
@@ -85,10 +85,10 @@ public class CashflowTest extends EntityTestSupport {
     @Test
     public void 発生即実現のキャッシュフローを登録する() {
         LocalDate baseDay = businessDay.day();
-        txAsset(() -> {
-            CashBalance.getOrNew(repAsset, "test1", "JPY");
+        tx(() -> {
+            CashBalance.getOrNew(rep, "test1", "JPY");
             // 発生即実現
-            Cashflow.register(repAsset, fixturesAsset.cfReg("test1", "1000", baseDay));
+            Cashflow.register(rep, fixturesAsset.cfReg("test1", "1000", baseDay));
             assertThat(CashBalance.getOrNew(rep, "test1", "JPY"),
                     hasProperty("amount", is(new BigDecimal("1000"))));
         });

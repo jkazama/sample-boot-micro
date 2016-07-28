@@ -128,10 +128,8 @@ main
 
 - JDK8 以上のインストール
 - [Lombok](http://projectlombok.org/download.html) のパッチ当て ( .jar を実行してインストーラの指示通りに実行 )
-- Gradle Plugin [ Buildship ] のインストール
-    - Eclipse Mars 以降は Buildship 版が入っているので不要です
 
-> うまくいかない時は Pivotal 版の Gradle Plugin を利用してください。
+> 以降は Gradle Plugin [ Buildship ] の利用を前提としているため、 Eclipse Mars 以降を推奨します。
 
 次の手順で本サンプルをプロジェクト化してください。  
 
@@ -213,18 +211,23 @@ Spring Boot では Executable Jar ( ライブラリや静的リソースなど�
 
 > 実行引数に 「 --spring.profiles.active=[プロファイル名]」 を追加する事で application.yml の設定値を変更できます。
 
+> 手元で確認した際 micro-web のビルドに失敗することがありました。ビルド失敗時は以下手順で分割ビルドを試してみてください。
+
+1. コンソールから 「 gradlew build -x :micro-web:build 」 を実行
+1. コンソールから 「 gradlew :micro-web:build 」 を実行
+
 ### 依存ライブラリ
 
 | ライブラリ               | バージョン | 用途/追加理由 |
 | ----------------------- | -------- | ------------- |
 | `spring-cloud`          | Brixton.RELEASE | Spring Cloud 基盤 |
-| `spring-boot-starter-*` | 1.3.5    | Spring Boot 基盤 (actuator/security/aop/cache/data-jpa/web) |
+| `spring-boot-starter-*` | 1.4.0    | Spring Boot 基盤 (actuator/security/aop/cache/data-jpa/web) |
 | `hibernate-*`           | 5.0.9    | DB 永続化サポート (core/java8) |
 | `ehcache`               | 3.1.+    | JCache 実装 |
 | `HikariCP`              | 2.3.+    | コネクションプーリング実装の組み立て用途 |
-| `jackson-datatype-*`    | 2.6.+    | JSON 変換時の Java8 / Hibernate 対応 |
+| `jackson-datatype-*`    | 2.8.+    | JSON 変換時の Java8 / Hibernate 対応 |
 | `commons-*`             | -        | 汎用ユーティリティライブラリ |
-| `icu4j-*`               | 54.1.+   | 文字変換ライブラリ |
+| `icu4j-*`               | 57.+   | 文字変換ライブラリ |
 
 > 実際の詳細な定義は `build.gradle` を参照してください
 
@@ -277,7 +280,7 @@ Eureka + Ribbon を利用して、シンプルに RestTemplate を用いてい�
 #### テスト
 
 パターンとしては通常の Spring コンテナを用いる 2 パターン ( WebMock テスト / コンテナテスト ) と、 Hibernate だけに閉じた実行時間に優れたテスト ( Entity のみが対象 ) の合計 3 パターンで考えます。 （ それぞれ基底クラスは `WebTestSupport` / `UnitTestSupport` / `EntityTestSupport` ）  
-テスト対象に Service まで含めるてしまうと冗長なので、そこら辺のカバレッジはあまり頑張らずに必要なものだけとしています。
+テスト対象に Service まで含めてしまうと冗長なので、そこら辺のカバレッジはあまり頑張らずに必要なものだけとしています。
 
 > Spring へ依存してしまうテストについては、 Spring Boot 1.4 で大幅に見直す予定です。
 

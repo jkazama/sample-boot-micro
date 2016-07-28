@@ -1,6 +1,6 @@
 buildscript {
   ext {
-    springCloudVersion = 'Brixton.SR4'
+    springCloudVersion = 'Brixton.SR1'
     springBootVersion = '1.4.0.RC1'
   }
   repositories {
