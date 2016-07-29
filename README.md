@@ -35,9 +35,10 @@ UI 層の公開実装は通常 JSP や Thymeleaf を用いて行いますが、�
 Spring Boot は様々な利用方法が可能ですが、本サンプルでは以下のポリシーで利用します。
 
 - 設定ファイルは yml を用いる。 Bean 定義に xml 等の拡張ファイルは用いない。
-- ライブラリ化しないので @Bean による将来拡張性を考慮せずにクラス単位の Bean ベタ登録を許容。
+- インフラ層のコンポーネントは @Bean で、 それ以外のコンポーネントは @Component 等でベタに登録していく。
+    - `ApplicationConfig` / `ApplicationDbConfig` / `ApplicationSecurityConfig`
 - 例外処理は終端 ( RestErrorAdvice / RestErrorCotroller ) で定義。 whitelabel 機能は無効化。
-- ORM 実装として Hibernate に特化。
+- JPA 実装として Hibernate に特化。
 - Spring Security の認証方式はベーシック認証でなく、昔からよくある HttpSession で。
 - 基礎的なユーティリティで Spring がサポートしていないのは簡易な実装を用意。
 
@@ -127,10 +128,8 @@ main
 
 - JDK8 以上のインストール
 - [Lombok](http://projectlombok.org/download.html) のパッチ当て ( .jar を実行してインストーラの指示通りに実行 )
-- Gradle Plugin [ Buildship ] のインストール
-    - Eclipse Mars 以降は Buildship 版が入っているので不要です
 
-> うまくいかない時は Pivotal 版の Gradle Plugin を利用してください。
+> 以降は Gradle Plugin [ Buildship ] の利用を前提としているため、 Eclipse Mars 以降を推奨します。
 
 次の手順で本サンプルをプロジェクト化してください。  
 
@@ -155,6 +154,8 @@ main
 1. *MicroWeb.java* に対し 「 右クリック -> Run As -> Java Application 」
 1. *Console* タブに 「 Started Application 」 という文字列が出力されればポート 8080 で起動が完了
 1. ブラウザを立ち上げて 「 http://localhost:8080/api/management/health 」 で状態を確認
+
+> STS (Spring Tool Suite) のプラグインを利用すると上記 main クラスを GUI の Boot Dashboard 経由で簡単に実行できます。
 
 #### サーバ起動 （ コンソール ）
 
@@ -208,38 +209,42 @@ Spring Boot では Executable Jar ( ライブラリや静的リソースなど�
 1. サブプロジェクトの `build/libs` 直下に jar が出力されるので Java8 以降の実行環境へ配布
 1. 実行環境でコンソールから 「 java -jar xxx.jar 」 を実行して起動
 
-*※実行引数に 「 --spring.profiles.active=[プロファイル名]」 を追加する事で application.yml の設定値を変更できます。*
+> 実行引数に 「 --spring.profiles.active=[プロファイル名]」 を追加する事で application.yml の設定値を変更できます。
+
+> 手元で確認した際 micro-web のビルドに失敗することがありました。ビルド失敗時は以下手順で分割ビルドを試してみてください。
+
+1. コンソールから 「 gradlew build -x :micro-web:build 」 を実行
+1. コンソールから 「 gradlew :micro-web:build 」 を実行
 
 ### 依存ライブラリ
 
 | ライブラリ               | バージョン | 用途/追加理由 |
 | ----------------------- | -------- | ------------- |
 | `spring-cloud`          | Brixton.RELEASE | Spring Cloud 基盤 |
-| `spring-boot-starter-*` | 1.3.5    | Spring Boot 基盤 (actuator/security/aop/cache/web) |
-| `spring-orm`            | 4.2.6    | Spring4 の ORM 概念サポート |
-| `hibernate-*`           | 5.1.0    | DB 永続化サポート (core/java8/ehcache) |
-| `ehcache-core`          | 2.6.+    | 最新の EhCache 設定記法を利用するため |
+| `spring-boot-starter-*` | 1.4.0    | Spring Boot 基盤 (actuator/security/aop/cache/data-jpa/web) |
+| `hibernate-*`           | 5.0.9    | DB 永続化サポート (core/java8) |
+| `ehcache`               | 3.1.+    | JCache 実装 |
 | `HikariCP`              | 2.3.+    | コネクションプーリング実装の組み立て用途 |
-| `jackson-datatype-*`    | 2.6.+    | JSON 変換時の Java8 / Hibernate 対応 |
+| `jackson-datatype-*`    | 2.8.+    | JSON 変換時の Java8 / Hibernate 対応 |
 | `commons-*`             | -        | 汎用ユーティリティライブラリ |
-| `icu4j-*`               | 54.1.+   | 文字変換ライブラリ |
+| `icu4j-*`               | 57.+   | 文字変換ライブラリ |
 
-*※実際の詳細な定義は `build.gradle` を参照してください*
+> 実際の詳細な定義は `build.gradle` を参照してください
 
 ### 補足解説（インフラ層）
 
 インフラ層の簡単な解説です。
 
-*※細かい概要は実際にコードを読むか、 「 `gradlew javadoc` 」 を実行して 「 `[subproject]/build/docs` 」 に出力されるドキュメントを参照してください*
+※細かい概要は実際にコードを読むか、 「 `gradlew javadoc` 」 を実行して 「 `[subproject]/build/docs` 」 に出力されるドキュメントを参照してください
 
 #### DB / トランザクション
 
-`sample.context.orm` 直下。ドメイン実装をより Entity に寄せるための ORM サポート実装です。 Repository ( スキーマ単位で定義 ) にドメイン処理を記載しないアプローチのため、 Spring Boot が提供する JPA 実装は利用していません。  
+`sample.context.orm` 直下。ドメイン実装をより Entity に寄せるための ORM サポート実装です。 Repository ( スキーマ単位で定義 ) にドメイン処理を記載しないアプローチのため、 Spring Boot が提供する JpaRepository は利用していません。  
 トランザクション定義はトラブルの種となるのでアプリケーション層でのみ許し、なるべく狭く限定した形で付与しています。単純な readOnly な処理のみ `@Transactional([Bean名称])` を利用してメソッド単位の対応を取ります。
 
 スキーマは標準のビジネスロジック用途 ( `DefaultRepository` ) とシステム用途 ( `SystemRepository` ) の2種類を想定しています。 Entity 実装ではスキーマに依存させず、引数に渡す側 ( 主にアプリケーション層 ) で判断させます。
 
-JPA 標準の機能だけでは十分ではないケースがあるため、 HibernateORM 依存を明確にして Hibernate 固有機能を利用できるようにしています。
+> Spring Data JPA が提供する JpaRepository を利用することも可能です。 ( 標準で DefaultRepository が管理しているスキーマへ接続します )
 
 #### 認証/認可
 
@@ -275,7 +280,7 @@ Eureka + Ribbon を利用して、シンプルに RestTemplate を用いてい�
 #### テスト
 
 パターンとしては通常の Spring コンテナを用いる 2 パターン ( WebMock テスト / コンテナテスト ) と、 Hibernate だけに閉じた実行時間に優れたテスト ( Entity のみが対象 ) の合計 3 パターンで考えます。 （ それぞれ基底クラスは `WebTestSupport` / `UnitTestSupport` / `EntityTestSupport` ）  
-テスト対象に Service まで含めるてしまうと冗長なので、そこら辺のカバレッジはあまり頑張らずに必要なものだけとしています。
+テスト対象に Service まで含めてしまうと冗長なので、そこら辺のカバレッジはあまり頑張らずに必要なものだけとしています。
 
 > Spring へ依存してしまうテストについては、 Spring Boot 1.4 で大幅に見直す予定です。
 

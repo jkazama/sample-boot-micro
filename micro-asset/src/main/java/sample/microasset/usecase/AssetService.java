@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -25,8 +26,9 @@ public class AssetService extends ServiceSupport {
     AssetRepository repAsset;
     @Autowired
     @Qualifier(AssetRepository.BeanNameTx)
-    private PlatformTransactionManager txAsset;
+    PlatformTransactionManager txAsset;
     @Autowired
+    @Lazy
     AssetMailDeliver mail;
 
     /** 匿名を除くActorを返します。 */

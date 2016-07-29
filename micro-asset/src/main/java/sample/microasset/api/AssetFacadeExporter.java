@@ -27,14 +27,14 @@ public class AssetFacadeExporter extends RestExporterSupport implements AssetFac
     
     /** {@inheritDoc} */
     @Override
-    @RequestMapping(PathFindUnprocessedCashOut)
+    @GetMapping(PathFindUnprocessedCashOut)
     public List<CashInOut> findUnprocessedCashOut() {
         return service.findUnprocessedCashOut();
     }
 
     /** {@inheritDoc} */
     @Override
-    @RequestMapping(value = PathWithdraw, method = RequestMethod.POST)
+    @PostMapping(PathWithdraw)
     public ResponseEntity<Long> withdraw(@RequestBody @Valid RegCashOut p) {
         return result(() -> service.withdraw(p));
     }

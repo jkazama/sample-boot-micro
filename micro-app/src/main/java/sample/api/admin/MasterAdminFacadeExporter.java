@@ -27,21 +27,21 @@ public class MasterAdminFacadeExporter extends RestExporterSupport implements Ma
     
     /** {@inheritDoc} */
     @Override
-    @RequestMapping(PathGetStaff)
-    public Optional<Staff> getStaff(String staffId) {
-        return service.getStaff(staffId);
+    @GetMapping(PathGetStaff)
+    public Staff getStaff(String staffId) {
+        return service.getStaff(staffId).orElse(null);
     }
     
     /** {@inheritDoc} */
     @Override
-    @RequestMapping(PathFindStaffAuthority)
+    @GetMapping(PathFindStaffAuthority)
     public List<StaffAuthority> findStaffAuthority(String staffId) {
         return service.findStaffAuthority(staffId);
     }
     
     /** {@inheritDoc} */
     @Override
-    @RequestMapping(value = PathRegisterHoliday, method = RequestMethod.POST)
+    @PostMapping(PathRegisterHoliday)
     public ResponseEntity<Void> registerHoliday(@RequestBody @Valid RegHoliday p) {
         return resultEmpty(() -> service.registerHoliday(p));
     }

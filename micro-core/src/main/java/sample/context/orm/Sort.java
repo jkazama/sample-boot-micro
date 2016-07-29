@@ -1,8 +1,12 @@
 package sample.context.orm;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import lombok.Data;
+import lombok.Value;
 import sample.context.Dto;
 
 /**
@@ -14,17 +18,7 @@ public class Sort implements Dto {
     private static final long serialVersionUID = 1L;
 
     /** ソート条件 */
-    private List<SortOrder> orders = new ArrayList<SortOrder>();
-
-    public Sort() {}
-    
-    public Sort(final SortOrder... orders) {
-        this.orders.addAll(Arrays.asList(orders));
-    }
-
-    public Sort(final List<SortOrder> orders) {
-        this.orders.addAll(orders);
-    }
+    private final List<SortOrder> orders = new ArrayList<SortOrder>();
 
     /** ソート条件を追加します。 */
     public Sort add(SortOrder order) {
@@ -66,19 +60,12 @@ public class Sort implements Dto {
     }
 
     /** フィールド単位のソート情報を表現します。 */
-    @Data
-    public static class SortOrder implements Dto {
+    @Value
+    public static class SortOrder implements Serializable {
         private static final long serialVersionUID = 1L;
         private String property;
         private boolean ascending;
-        
-        public SortOrder() {}
-        
-        private SortOrder(String property, boolean ascending) {
-            this.property = property;
-            this.ascending = ascending;
-        }
-        
+
         public static SortOrder asc(String property) {
             return new SortOrder(property, true);
         }

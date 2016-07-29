@@ -1,60 +1,47 @@
 package sample.microasset.context.orm;
 
+import javax.persistence.*;
 import javax.sql.DataSource;
 
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.orm.hibernate5.*;
-import org.springframework.stereotype.Repository;
+import org.springframework.orm.jpa.*;
 
-import lombok.Setter;
+import lombok.*;
 import sample.context.orm.*;
 
 /** 資産スキーマのRepositoryを表現します。 */
-@Repository
 @Setter
 public class AssetRepository extends OrmRepository {
-    public static final String Prefix = "extension.datasource.asset";
-    
     public static final String BeanNameDs = "assetDataSource";
-    public static final String BeanNameSf = "assetSessionFactory";
+    public static final String BeanNameEmf = "assetEntityManagerFactory";
     public static final String BeanNameTx = "assetTransactionManager";
 
-    @Autowired
-    @Qualifier(BeanNameSf)
-    private SessionFactory sessionFactory;
+    @PersistenceContext(unitName = BeanNameEmf)
+    private EntityManager em;
 
     @Override
-    public SessionFactory sf() {
-        return sessionFactory;
+    public EntityManager em() {
+        return em;
     }
 
     /** 資産スキーマのHibernateコンポーネントを生成します。 */
-    @ConfigurationProperties(prefix = "extension.hibernate.asset")
-    public static class AssetRepositoryConfig extends OrmRepositoryConfig {
-        @Bean(name = BeanNameSf)
-        @Override
-        public LocalSessionFactoryBean sessionFactory(
-                @Qualifier(BeanNameDs) final DataSource dataSource, final OrmInterceptor interceptor) {
-            return super.sessionFactory(dataSource, interceptor);
-        }
-
-        @Bean(name = BeanNameTx)
-        @Override
-        public HibernateTransactionManager transactionManager(
-                @Qualifier(BeanNameSf) final SessionFactory sessionFactory) {
-            return super.transactionManager(sessionFactory);
-        }
-    }
-
-    /** 資産スキーマのDataSourceを生成します。 */
-    @ConfigurationProperties(prefix = Prefix)
-    public static class AssetDataSourceConfig extends OrmDataSourceConfig {
-        @Bean(name = BeanNameDs, destroyMethod = "shutdown")
+    @ConfigurationProperties(prefix = "extension.datasource.asset")
+    @Data
+    @EqualsAndHashCode(callSuper = false)
+    public static class AssetDataSourceProperties extends OrmDataSourceProperties {
+        private OrmRepositoryProperties jpa = new OrmRepositoryProperties();
+        
         public DataSource dataSource() {
             return super.dataSource();
+        }
+        
+        public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(
+                final DataSource dataSource) {
+            return jpa.entityManagerFactoryBean(BeanNameEmf, dataSource);
+        }
+
+        public JpaTransactionManager transactionManager(final EntityManagerFactory emf) {
+            return jpa.transactionManager(emf);
         }
     }
 

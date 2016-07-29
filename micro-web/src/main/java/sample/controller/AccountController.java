@@ -9,9 +9,8 @@ import lombok.*;
 import sample.ValidationException;
 import sample.ValidationException.ErrorKeys;
 import sample.context.actor.Actor;
-import sample.context.security.SecurityActorFinder;
+import sample.context.security.*;
 import sample.context.security.SecurityActorFinder.ActorDetails;
-import sample.context.security.SecurityConfig.SecurityProperties;
 
 /**
  * 口座に関わる顧客のUI要求を処理します。
@@ -24,13 +23,13 @@ public class AccountController extends ControllerSupport {
     SecurityProperties securityProps;
 
     /** ログイン状態を確認します。 */
-    @RequestMapping("/loginStatus")
+    @GetMapping("/loginStatus")
     public boolean loginStatus() {
         return true;
     }
 
     /** 口座ログイン情報を取得します。 */
-    @RequestMapping("/loginAccount")
+    @GetMapping("/loginAccount")
     public LoginAccount loadLoginAccount() {
         if (securityProps.auth().isEnabled()) {
             ActorDetails actorDetails = SecurityActorFinder.actorDetails()

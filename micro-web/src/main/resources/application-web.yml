@@ -7,7 +7,7 @@ server:
   port: 8080
 
 eureka.client:
-  registerWithEureka: false
+  register-with-eureka: false
 
 extension:
   security:

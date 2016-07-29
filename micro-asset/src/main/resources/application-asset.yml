@@ -9,16 +9,12 @@ server:
 extension:
   datasource:
     asset:
-      driver-class-name: org.h2.Driver
       url: jdbc:h2:tcp://localhost:9092/mem:asset
       username:
       password:
-  hibernate:
-    asset:
-      dialect: org.hibernate.dialect.H2Dialect
-      packageToScan: sample.microasset.model.asset
-      showSql: true
-      createDrop: true
+      jpa:
+        package-to-scan: sample.microasset.model.asset
+        hibernate.ddl-auto: create-drop
   datafixture.enabled: true
 
  

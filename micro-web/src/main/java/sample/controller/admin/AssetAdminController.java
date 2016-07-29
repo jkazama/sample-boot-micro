@@ -25,7 +25,7 @@ public class AssetAdminController extends ControllerSupport {
     AssetAdminFacade facade;
 
     /** 未処理の振込依頼情報を検索します。 */
-    @RequestMapping(PathFindCashInOut)
+    @GetMapping(PathFindCashInOut)
     public List<CashInOut> findCashInOut(@Valid FindCashInOut p) {
         return facade.findCashInOut(p);
     }

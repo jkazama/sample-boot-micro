@@ -27,21 +27,21 @@ public class AssetAdminFacadeExporter extends RestExporterSupport implements Ass
     
     /** {@inheritDoc} */
     @Override
-    @RequestMapping(PathFindCashInOut)
+    @GetMapping(PathFindCashInOut)
     public List<CashInOut> findCashInOut(@Valid FindCashInOut p) {
         return service.findCashInOut(p);
     }
     
     /** {@inheritDoc} */
     @Override
-    @RequestMapping(value = PathClosingCashOut, method = RequestMethod.POST)
+    @PostMapping(PathClosingCashOut)
     public ResponseEntity<Void> closingCashOut() {
         return resultEmpty(() -> service.closingCashOut());
     }
     
     /** {@inheritDoc} */
     @Override
-    @RequestMapping(value = PathRealizeCashflow, method = RequestMethod.POST)
+    @PostMapping(PathRealizeCashflow)
     public ResponseEntity<Void> realizeCashflow() {
         return resultEmpty(() -> service.realizeCashflow());
     }

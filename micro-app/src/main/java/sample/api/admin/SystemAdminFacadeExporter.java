@@ -31,35 +31,35 @@ public class SystemAdminFacadeExporter extends RestExporterSupport implements Sy
     
     /** {@inheritDoc} */
     @Override
-    @RequestMapping(PathFindAudiActor)
+    @GetMapping(PathFindAudiActor)
     public PagingList<AuditActor> findAuditActor(@Valid FindAuditActor p) {
         return service.findAuditActor(p);
     }
     
     /** {@inheritDoc} */
     @Override
-    @RequestMapping(PathFindAudiEvent)
+    @GetMapping(PathFindAudiEvent)
     public PagingList<AuditEvent> findAuditEvent(@Valid FindAuditEvent p) {
         return service.findAuditEvent(p);
     }
     
     /** {@inheritDoc} */
     @Override
-    @RequestMapping(PathFindAppSetting)
+    @GetMapping(PathFindAppSetting)
     public List<AppSetting> findAppSetting(@Valid FindAppSetting p) {
         return service.findAppSetting(p);
     }
     
     /** {@inheritDoc} */
     @Override
-    @RequestMapping(value = PathChangeAppSetting, method = RequestMethod.POST)
+    @PostMapping(PathChangeAppSetting)
     public ResponseEntity<Void> changeAppSetting(String id, String value) {
         return resultEmpty(() -> service.changeAppSetting(id, value));
     }
     
     /** {@inheritDoc} */
     @Override
-    @RequestMapping(value = PathProcessDay, method = RequestMethod.POST)
+    @PostMapping(PathProcessDay)
     public ResponseEntity<Void> processDay() {
         return resultEmpty(() -> service.processDay());
     }

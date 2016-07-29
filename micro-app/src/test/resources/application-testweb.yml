@@ -1,0 +1,21 @@
+---
+spring:
+  profiles: testweb
+
+logging.config: classpath:logback.xml
+
+eureka.client.enabled: false
+
+extension:
+  datasource:
+    default:
+      url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      username:
+      password:
+      jpa.hibernate.ddl-auto: none
+    system:
+      url: jdbc:h2:mem:system;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      username:
+      password:
+      jpa.hibernate.ddl-auto: none
+  security.auth.enabled: false

@@ -19,7 +19,7 @@ public interface MasterAdminFacade {
     String PathRegisterHoliday = "/holiday";
     
     /** 社員を取得します。 */
-    Optional<Staff> getStaff(String staffId);
+    Staff getStaff(String staffId);
 
     /** 社員権限を取得します。 */
     List<StaffAuthority> findStaffAuthority(String staffId);

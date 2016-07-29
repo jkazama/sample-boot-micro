@@ -30,25 +30,25 @@ public class SystemAdminController extends ControllerSupport {
     SystemAdminFacade facade;
 
     /** 利用者監査ログを検索します。 */
-    @RequestMapping(PathFindAudiActor)
+    @GetMapping(PathFindAudiActor)
     public PagingList<AuditActor> findAuditActor(@Valid FindAuditActor p) {
         return facade.findAuditActor(p);
     }
 
     /** イベント監査ログを検索します。 */
-    @RequestMapping(PathFindAudiEvent)
+    @GetMapping(PathFindAudiEvent)
     public PagingList<AuditEvent> findAuditEvent(@Valid FindAuditEvent p) {
         return facade.findAuditEvent(p);
     }
 
     /** アプリケーション設定一覧を検索します。 */
-    @RequestMapping(PathFindAppSetting)
+    @GetMapping(PathFindAppSetting)
     public List<AppSetting> findAppSetting(@Valid FindAppSetting p) {
         return facade.findAppSetting(p);
     }
 
     /** アプリケーション設定情報を変更します。 */
-    @RequestMapping(value = PathChangeAppSetting, method = RequestMethod.POST)
+    @PostMapping(PathChangeAppSetting)
     public ResponseEntity<Void> changeAppSetting(@PathVariable String id, String value) {
         return facade.changeAppSetting(id, value);
     }
