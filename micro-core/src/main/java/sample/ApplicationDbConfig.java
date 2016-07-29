@@ -30,6 +30,7 @@ public class ApplicationDbConfig {
     static class DefaultDbConfig {
         @Bean
         @Primary
+        @DependsOn(DefaultRepository.BeanNameEmf)
         DefaultRepository defaultRepository() {
             return new DefaultRepository();
         }
@@ -63,6 +64,7 @@ public class ApplicationDbConfig {
     static class SystemDbConfig {
         
         @Bean
+        @DependsOn(SystemRepository.BeanNameEmf)
         SystemRepository systemRepository() {
             return new SystemRepository();
         }

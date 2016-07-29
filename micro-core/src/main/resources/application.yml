@@ -2,8 +2,6 @@
 spring:
   application.name: sample-boot-micro
   aop.proxy-target-class: true
-  autoconfigure.exclude:
-    - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   messages.basename: messages-validation, messages
   cache.jcache.config: ehcache.xml
   jackson:
@@ -37,27 +35,28 @@ management:
 
 eureka:
   instance:
-    statusPageUrlPath: ${management.context-path}/info
-    healthCheckUrlPath: ${management.context-path}/health
+    status-page-url-path: ${management.context-path}/info
+    health-check-url-path: ${management.context-path}/health
   client:
-    registerWithEureka: true
-    fetchRegistry: true
+    enabled: true
+    register-with-eureka: true
+    fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka/
 
 extension:
   datasource:
     default:
-      url: jdbc:h2:tcp://localhost:9092/mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-      username:
+      url: jdbc:h2:tcp://localhost:9092/mem:testdb
+      username: sa
       password:
       jpa:
         package-to-scan: sample.model
         show-sql: false
         hibernate.ddl-auto: none
     system:
-      url: jdbc:h2:tcp://localhost:9092/mem:system;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-      username:
+      url: jdbc:h2:tcp://localhost:9092/mem:system
+      username: sa
       password:
       jpa:
         package-to-scan: sample.context

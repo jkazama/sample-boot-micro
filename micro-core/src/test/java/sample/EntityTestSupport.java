@@ -144,7 +144,7 @@ public class EntityTestSupport {
     }
 
     /** トランザクション処理を行います。 */
-    public <T> T tx(Supplier<T> callable) {
+    protected <T> T tx(Supplier<T> callable) {
         return new TransactionTemplate(txm).execute((status) -> {
             T ret = callable.get();
             if (ret instanceof Entity) {
@@ -154,7 +154,7 @@ public class EntityTestSupport {
         });
     }
 
-    public void tx(Runnable command) {
+    protected void tx(Runnable command) {
         tx(() -> {
             command.run();
             rep.flush();

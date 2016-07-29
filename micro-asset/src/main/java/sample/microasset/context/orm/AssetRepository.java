@@ -5,16 +5,13 @@ import javax.sql.DataSource;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.orm.jpa.*;
-import org.springframework.stereotype.Repository;
 
 import lombok.*;
 import sample.context.orm.*;
 
 /** 資産スキーマのRepositoryを表現します。 */
-@Repository
 @Setter
 public class AssetRepository extends OrmRepository {
-
     public static final String BeanNameDs = "assetDataSource";
     public static final String BeanNameEmf = "assetEntityManagerFactory";
     public static final String BeanNameTx = "assetTransactionManager";

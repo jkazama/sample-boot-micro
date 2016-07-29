@@ -34,8 +34,8 @@ public class MasterAdminFacadeInvoker extends RestInvokerSupport implements Mast
 
     /** {@inheritDoc} */
     @Override
-    public Optional<Staff> getStaff(String staffId) {
-        return Optional.ofNullable(invoker().get(PathGetStaff, Staff.class, staffId));
+    public Staff getStaff(String staffId) {
+        return invoker().get(PathGetStaff, Staff.class, staffId);
     }
     
     /** {@inheritDoc} */

@@ -21,6 +21,7 @@ import sample.microasset.context.orm.AssetRepository.AssetDataSourceProperties;
 public class MicroAssetDbConfig {
     
     @Bean
+    @DependsOn(BeanNameEmf)
     AssetRepository assetRepository() {
         return new AssetRepository();
     }

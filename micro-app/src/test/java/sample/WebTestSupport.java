@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.*;
@@ -46,6 +47,7 @@ public abstract class WebTestSupport {
         this.mockTime = new Timestamper();
         this.businessDay = new BusinessDayHandler(mockTime, null);
         this.fixtures = new DataFixtures();
+        this.fixtures.setEncoder(new BCryptPasswordEncoder());
     }
     
     protected String uri(String path) {
@@ -71,6 +73,17 @@ public abstract class WebTestSupport {
                 expects.expects.toArray(new ResultMatcher[0]));
     }
     
+    /** Post 要求 ( JSON ) を投げて結果を検証します。 */
+    protected ResultActions performJsonGet(String path, String content, final JsonExpects expects) {
+        return performJsonGet(uriBuilder(path).build(), content, expects);
+    }
+    
+    protected ResultActions performJsonGet(UriComponents uri, String content, final JsonExpects expects) {
+        return perform(
+                get(uri.toUriString()).contentType(MediaType.APPLICATION_JSON).content(content).accept(MediaType.APPLICATION_JSON),
+                expects.expects.toArray(new ResultMatcher[0]));
+    }
+    
     /** Post 要求を投げて結果を検証します。 */
     protected ResultActions performPost(String path, final JsonExpects expects) {
         return performPost(uriBuilder(path).build(), expects);
@@ -79,6 +92,17 @@ public abstract class WebTestSupport {
     protected ResultActions performPost(UriComponents uri, final JsonExpects expects) {
         return perform(
                 post(uri.toUriString()).accept(MediaType.APPLICATION_JSON),
+                expects.expects.toArray(new ResultMatcher[0]));
+    }
+    
+    /** Post 要求 ( JSON ) を投げて結果を検証します。 */
+    protected ResultActions performJsonPost(String path, String content, final JsonExpects expects) {
+        return performJsonPost(uriBuilder(path).build(), content, expects);
+    }
+    
+    protected ResultActions performJsonPost(UriComponents uri, String content, final JsonExpects expects) {
+        return perform(
+                post(uri.toUriString()).contentType(MediaType.APPLICATION_JSON).content(content).accept(MediaType.APPLICATION_JSON),
                 expects.expects.toArray(new ResultMatcher[0]));
     }
     
@@ -98,12 +122,24 @@ public abstract class WebTestSupport {
     /** JSON 検証をビルダー形式で可能にします */
     public static class JsonExpects {
         public List<ResultMatcher> expects = new ArrayList<>();
+        public JsonExpects emptyContents() {
+            this.expects.add(content().string(""));
+            return this;
+        }
         public JsonExpects match(String key, Object expectedValue) {
             this.expects.add(jsonPath(key).value(expectedValue));
             return this;
         }
         public <T> JsonExpects matcher(String key, Matcher<T> matcher) {
             this.expects.add(jsonPath(key).value(matcher));
+            return this;
+        }
+        public JsonExpects exists(String key) {
+            this.expects.add(jsonPath(key).exists());
+            return this;
+        }
+        public JsonExpects doseNotExists(String key) {
+            this.expects.add(jsonPath(key).doesNotExist());
             return this;
         }
         public JsonExpects empty(String key) {

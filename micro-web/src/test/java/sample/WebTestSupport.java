@@ -127,12 +127,24 @@ public abstract class WebTestSupport {
     /** JSON 検証をビルダー形式で可能にします */
     public static class JsonExpects {
         public List<ResultMatcher> expects = new ArrayList<>();
+        public JsonExpects emptyContents() {
+            this.expects.add(content().string(""));
+            return this;
+        }
         public JsonExpects match(String key, Object expectedValue) {
             this.expects.add(jsonPath(key).value(expectedValue));
             return this;
         }
         public <T> JsonExpects matcher(String key, Matcher<T> matcher) {
             this.expects.add(jsonPath(key).value(matcher));
+            return this;
+        }
+        public JsonExpects exists(String key) {
+            this.expects.add(jsonPath(key).exists());
+            return this;
+        }
+        public JsonExpects doseNotExists(String key) {
+            this.expects.add(jsonPath(key).doesNotExist());
             return this;
         }
         public JsonExpects empty(String key) {
