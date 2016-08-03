@@ -12,7 +12,7 @@ buildscript {
 }
 
 allprojects {
-  version = "1.0.0"
+  version = "1.2.1"
 }
 
 subprojects {
@@ -28,7 +28,6 @@ subprojects {
     options.encoding = defaultEncoding
     options.addBooleanOption('Xdoclint:none', true)
   }
-
 
   test {
     include "**/model/**", "**/controller/**", "**/usecase/**", "**/util/**", "**/context/**"
