@@ -1,7 +1,7 @@
 buildscript {
   ext {
-    springCloudVersion = 'Brixton.SR1'
-    springBootVersion = '1.4.0.RELEASE'
+    springCloudVersion = 'Brixton.SR6'
+    springBootVersion = '1.4.1.RELEASE'
   }
   repositories {
     jcenter()
