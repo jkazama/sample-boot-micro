@@ -1,7 +1,7 @@
 buildscript {
   ext {
-    springCloudVersion = 'Brixton.SR1'
-    springBootVersion = '1.4.0.RELEASE'
+    springCloudVersion = 'Brixton.SR6'
+    springBootVersion = '1.4.1.RELEASE'
   }
   repositories {
     jcenter()
@@ -12,7 +12,7 @@ buildscript {
 }
 
 allprojects {
-  version = "1.0.0"
+  version = "1.2.1"
 }
 
 subprojects {
@@ -28,7 +28,6 @@ subprojects {
     options.encoding = defaultEncoding
     options.addBooleanOption('Xdoclint:none', true)
   }
-
 
   test {
     include "**/model/**", "**/controller/**", "**/usecase/**", "**/util/**", "**/context/**"
@@ -66,8 +65,9 @@ subprojects {
     compile "com.zaxxer:HikariCP:2.4.+"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5:2.8.+"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.+"
+    compile "org.eclipse.collections:eclipse-collections:7.1.0"
+    compile "org.eclipse.collections:eclipse-collections-api:7.1.0"
     compile "commons-io:commons-io:2.5"
-    compile "org.apache.commons:commons-collections4:4.1"
     compile "org.apache.commons:commons-lang3:3.4"
     compile "com.ibm.icu:icu4j:57.1"
     compile "org.jolokia:jolokia-core:1.3.3"
@@ -79,24 +79,24 @@ subprojects {
 }
 
 project(':micro-app') {
-    dependencies {
-        compile project(':micro-core')
-    }
+  dependencies {
+    compile project(':micro-core')
+  }
 }
 
 project(':micro-asset') {
-    dependencies {
-        compile project(':micro-core')
-    }
+  dependencies {
+    compile project(':micro-core')
+  }
 }
 
 project(':micro-web') {
-    dependencies {
-        compile project(':micro-core')
-        compile project(':micro-asset')
-    }
+  dependencies {
+    compile project(':micro-core')
+    compile project(':micro-asset')
+  }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = "2.14.1"
+  gradleVersion = "3.0"
 }

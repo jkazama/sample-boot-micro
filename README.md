@@ -280,9 +280,6 @@ Eureka + Ribbon を利用して、シンプルに RestTemplate を用いてい�
 #### テスト
 
 パターンとしては通常の Spring コンテナを用いる 2 パターン ( WebMock テスト / コンテナテスト ) と、 Hibernate だけに閉じた実行時間に優れたテスト ( Entity のみが対象 ) の合計 3 パターンで考えます。 （ それぞれ基底クラスは `WebTestSupport` / `UnitTestSupport` / `EntityTestSupport` ）  
-テスト対象に Service まで含めてしまうと冗長なので、そこら辺のカバレッジはあまり頑張らずに必要なものだけとしています。
-
-> Spring へ依存してしまうテストについては、 Spring Boot 1.4 で大幅に見直す予定です。
 
 ### License
 
