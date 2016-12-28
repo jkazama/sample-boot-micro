@@ -208,13 +208,9 @@ Spring Boot では Executable Jar ( ライブラリや静的リソースなど�
 1. コンソールから 「 gradlew build 」 を実行
 1. サブプロジェクトの `build/libs` 直下に jar が出力されるので Java8 以降の実行環境へ配布
 1. 実行環境でコンソールから 「 java -jar xxx.jar 」 を実行して起動
+    - サブプロジェクト同士の依存が発生する jar は xxx-exec.jar に読み換えてください
 
 > 実行引数に 「 --spring.profiles.active=[プロファイル名]」 を追加する事で application.yml の設定値を変更できます。
-
-> 手元で確認した際 micro-web のビルドに失敗することがありました。ビルド失敗時は以下手順で分割ビルドを試してみてください。
-
-1. コンソールから 「 gradlew build -x :micro-web:build 」 を実行
-1. コンソールから 「 gradlew :micro-web:build 」 を実行
 
 ### 依存ライブラリ
 

@@ -1,8 +1,9 @@
 bootRepackage {
   mainClass = 'sample.MicroApp'
+  classifier = 'exec'
 }
 
 dependencies {
-  compile "de.codecentric:spring-boot-admin-server:1.4.1"
-  compile "de.codecentric:spring-boot-admin-server-ui:1.4.1"
+  compile "de.codecentric:spring-boot-admin-server:1.4.4"
+  compile "de.codecentric:spring-boot-admin-server-ui:1.4.4"
 }
