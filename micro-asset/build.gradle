@@ -1,3 +1,4 @@
 bootRepackage {
   mainClass = 'sample.microasset.MicroAsset'
+  classifier = 'exec'
 }

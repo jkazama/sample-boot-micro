@@ -1,7 +1,7 @@
 buildscript {
   ext {
-    springCloudVersion = 'Brixton.SR6'
-    springBootVersion = '1.4.1.RELEASE'
+    springCloudVersion = 'Camden.SR3'
+    springBootVersion = '1.4.3.RELEASE'
   }
   repositories {
     jcenter()
@@ -12,11 +12,11 @@ buildscript {
 }
 
 allprojects {
-  version = "1.2.1"
+  version = "1.3.0"
 }
 
 subprojects {
-  apply plugin: "spring-boot"
+  apply plugin: "org.springframework.boot"
 
   sourceCompatibility = '1.8'
   targetCompatibility = '1.8'
@@ -35,6 +35,7 @@ subprojects {
 
   springBoot {
     executable = true
+    buildInfo()
   }
 
   repositories {
@@ -49,7 +50,7 @@ subprojects {
   }
     
   dependencies {
-    compileOnly "org.projectlombok:lombok:1.16.8"
+    compileOnly "org.projectlombok:lombok:1.16.12"
     compile "org.springframework.cloud:spring-cloud-starter-eureka"
     compile "org.springframework.cloud:spring-cloud-starter-feign"
     compile "org.springframework.cloud:spring-cloud-starter-sleuth"
@@ -62,18 +63,18 @@ subprojects {
     compile "org.hibernate:hibernate-java8"
     compile "org.ehcache:ehcache:3.1.+"
     compile "javax.cache:cache-api:1.0.0"
-    compile "com.zaxxer:HikariCP:2.4.+"
+    compile "com.zaxxer:HikariCP:2.5.+"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5:2.8.+"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.+"
-    compile "org.eclipse.collections:eclipse-collections:7.1.0"
-    compile "org.eclipse.collections:eclipse-collections-api:7.1.0"
+    compile "org.eclipse.collections:eclipse-collections:8.0.0"
+    compile "org.eclipse.collections:eclipse-collections-api:8.0.0"
     compile "commons-io:commons-io:2.5"
-    compile "org.apache.commons:commons-lang3:3.4"
-    compile "com.ibm.icu:icu4j:57.1"
+    compile "org.apache.commons:commons-lang3:3.5"
+    compile "com.ibm.icu:icu4j:58.2"
     compile "org.jolokia:jolokia-core:1.3.3"
     compile fileTree(dir: 'libs', includes: ['*.jar'])
     runtime "com.h2database:h2:1.4.+"
-    testCompileOnly "org.projectlombok:lombok:1.16.8"
+    testCompileOnly "org.projectlombok:lombok:1.16.12"
     testCompile "org.springframework.boot:spring-boot-starter-test"
   }
 }
@@ -98,5 +99,5 @@ project(':micro-web') {
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion = "3.0"
+  gradleVersion = "3.2.1"
 }
