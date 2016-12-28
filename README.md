@@ -216,14 +216,13 @@ Spring Boot では Executable Jar ( ライブラリや静的リソースなど�
 
 | ライブラリ               | バージョン | 用途/追加理由 |
 | ----------------------- | -------- | ------------- |
-| `spring-cloud`          | Brixton.RELEASE | Spring Cloud 基盤 |
-| `spring-boot-starter-*` | 1.4.0    | Spring Boot 基盤 (actuator/security/aop/cache/data-jpa/web) |
-| `hibernate-*`           | 5.0.9    | DB 永続化サポート (core/java8) |
+| `spring-cloud`          | Camden.SR3 | Spring Cloud 基盤 |
+| `spring-boot-starter-*` | 1.4.3    | Spring Boot 基盤 (actuator/security/aop/cache/data-jpa/web) |
 | `ehcache`               | 3.1.+    | JCache 実装 |
-| `HikariCP`              | 2.3.+    | コネクションプーリング実装の組み立て用途 |
+| `HikariCP`              | 2.5.+    | コネクションプーリング実装の組み立て用途 |
 | `jackson-datatype-*`    | 2.8.+    | JSON 変換時の Java8 / Hibernate 対応 |
 | `commons-*`             | -        | 汎用ユーティリティライブラリ |
-| `icu4j-*`               | 57.+   | 文字変換ライブラリ |
+| `icu4j-*`               | 58.+   | 文字変換ライブラリ |
 
 > 実際の詳細な定義は `build.gradle` を参照してください
 
