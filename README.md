@@ -216,8 +216,8 @@ Spring Boot では Executable Jar ( ライブラリや静的リソースなど�
 
 | ライブラリ               | バージョン | 用途/追加理由 |
 | ----------------------- | -------- | ------------- |
-| `spring-cloud`          | Camden.SR3 | Spring Cloud 基盤 |
-| `spring-boot-starter-*` | 1.4.3    | Spring Boot 基盤 (actuator/security/aop/cache/data-jpa/web) |
+| `spring-cloud`          | Camden.+ | Spring Cloud 基盤 |
+| `spring-boot-starter-*` | 1.4.+    | Spring Boot 基盤 (actuator/security/aop/cache/data-jpa/web) |
 | `ehcache`               | 3.1.+    | JCache 実装 |
 | `HikariCP`              | 2.5.+    | コネクションプーリング実装の組み立て用途 |
 | `jackson-datatype-*`    | 2.8.+    | JSON 変換時の Java8 / Hibernate 対応 |
