@@ -147,10 +147,10 @@ main
 1. ブラウザを立ち上げて 「 http://localhost:8761/ 」 で状態を確認
 1. *MicroApp.java* に対し 「 右クリック -> Run As -> Java Application 」
 1. *Console* タブに 「 Started Application 」 という文字列が出力されればポート 8090 で起動が完了
-1. ブラウザを立ち上げて 「 http://localhost:8090/api/management/health 」 で状態を確認
+1. ブラウザを立ち上げて 「 http://localhost:8090/ 」 で状態を確認 ( Spring Admin )
 1. *MicroAsset.java* に対し 「 右クリック -> Run As -> Java Application 」
 1. *Console* タブに 「 Started Application 」 という文字列が出力されればポート 8100 で起動が完了
-1. ブラウザを立ち上げて 「 http://localhost:8090/api/management/health 」 で状態を確認
+1. ブラウザを立ち上げて 「 http://localhost:8100/api/management/health 」 で状態を確認
 1. *MicroWeb.java* に対し 「 右クリック -> Run As -> Java Application 」
 1. *Console* タブに 「 Started Application 」 という文字列が出力されればポート 8080 で起動が完了
 1. ブラウザを立ち上げて 「 http://localhost:8080/api/management/health 」 で状態を確認
