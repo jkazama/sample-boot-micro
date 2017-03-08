@@ -1,9 +1,9 @@
 buildscript {
   ext {
     springCloudVersion = 'Camden.SR5'
-    springBootVersion = '1.5.1.RELEASE'
+    springBootVersion = '1.5.2.RELEASE'
   }
-  ext["hibernate.version"] = "5.2.6.Final" 
+  ext["hibernate.version"] = "5.2.8.Final" 
   repositories {
     jcenter()
   }
@@ -13,7 +13,7 @@ buildscript {
 }
 
 allprojects {
-  version = "1.4.0"
+  version = "1.4.1"
 }
 
 subprojects {
@@ -99,5 +99,5 @@ project(':micro-web') {
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion = "3.3"
+  gradleVersion = "3.4.1"
 }
