@@ -12,10 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.*;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.*;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.validation.BindException;
-import org.springframework.web.HttpMediaTypeNotAcceptableException;
-import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.validation.*;
+import org.springframework.web.HttpMediaTypeException;
+import org.springframework.web.bind.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -47,11 +48,18 @@ public class RestErrorAdvice {
     private Locale locale() {
         return session.actor().getLocale();
     }
+    
+    /** メッセージ内容の読み込み失敗例外 */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, String[]>> handleHttpMessageNotReadable(HttpMessageNotReadableException e) {
+        log.warn(e.getMessage());
+        return new ErrorHolder(msg, locale(), "error.HttpMessageNotReadable").result(HttpStatus.BAD_REQUEST);
+    }
 
     /** メディアタイプのミスマッチ例外 */
-    @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
-    public ResponseEntity<Map<String, String[]>> handleHttpMediaTypeNotAcceptable(
-            HttpMediaTypeNotAcceptableException e) {
+    @ExceptionHandler(HttpMediaTypeException.class)
+    public ResponseEntity<Map<String, String[]>> handleHttpMediaTypeException(
+            HttpMediaTypeException e) {
         log.warn(e.getMessage());
         return new ErrorHolder(msg, locale(), "error.HttpMediaTypeNotAcceptable").result(HttpStatus.BAD_REQUEST);
     }
@@ -86,13 +94,25 @@ public class RestErrorAdvice {
         e.getConstraintViolations().forEach((v) -> warns.add(v.getPropertyPath().toString(), v.getMessage()));
         return new ErrorHolder(msg, locale(), warns.list()).result(HttpStatus.BAD_REQUEST);
     }
+    
+    /** Controllerへのリクエスト紐付け例外(for JSON) */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String[]>> handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
+        log.warn(e.getMessage());
+        return new ErrorHolder(msg, locale(), convert(e.getBindingResult().getAllErrors()).list())
+                .result(HttpStatus.BAD_REQUEST);
+    }
 
     /** Controllerへのリクエスト紐付け例外 */
     @ExceptionHandler(BindException.class)
     public ResponseEntity<Map<String, String[]>> handleBind(BindException e) {
         log.warn(e.getMessage());
+        return new ErrorHolder(msg, locale(), convert(e.getAllErrors()).list()).result(HttpStatus.BAD_REQUEST);
+    }
+    
+    protected Warns convert(List<ObjectError> errors) {
         Warns warns = Warns.init();
-        e.getAllErrors().forEach((oe) -> {
+        errors.forEach((oe) -> {
             String field = "";
             if (1 == oe.getCodes().length) {
                 field = bindField(oe.getCodes()[0]);
@@ -110,7 +130,7 @@ public class RestErrorAdvice {
             }
             warns.add(field, message, args.toArray(new String[0]));
         });
-        return new ErrorHolder(msg, locale(), warns.list()).result(HttpStatus.BAD_REQUEST);
+        return warns;
     }
 
     protected String bindField(String field) {
