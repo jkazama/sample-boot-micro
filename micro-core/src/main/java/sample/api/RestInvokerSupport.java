@@ -41,7 +41,7 @@ public abstract class RestInvokerSupport {
     
     /** API 接続先ルートとなる URL を返します。 */
     protected String rootUrl() {
-        return String.format("http://%s%s", applicationName(), Optional.ofNullable(rootPath()).orElse(""));
+        return "http://" + applicationName() + Optional.ofNullable(rootPath()).orElse("");
     }
 
     /** Ribbon を用いた RestInvoker を返します。 */
