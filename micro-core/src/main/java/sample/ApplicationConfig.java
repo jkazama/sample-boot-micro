@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 
@@ -27,7 +26,7 @@ public class ApplicationConfig {
     
     /** SpringMvcの拡張コンフィギュレーション */
     @Configuration
-    static class WebMvcConfig extends WebMvcConfigurerAdapter {
+    static class WebMvcConfig {
         @Autowired
         private MessageSource message;
 
@@ -39,16 +38,10 @@ public class ApplicationConfig {
 
         /** BeanValidationメッセージのUTF-8に対応したValidator。 */
         @Bean
-        LocalValidatorFactoryBean validator() {
+        LocalValidatorFactoryBean mvcValidator() {
             LocalValidatorFactoryBean factory = new LocalValidatorFactoryBean();
             factory.setValidationMessageSource(message);
             return factory;
-        }
-
-        /** 標準Validatorの差し替えをします。 */
-        @Override
-        public org.springframework.validation.Validator getValidator() {
-            return validator();
         }
 
     }
