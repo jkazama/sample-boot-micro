@@ -28,14 +28,14 @@ public class MasterAdminFacadeExporter extends RestExporterSupport implements Ma
     /** {@inheritDoc} */
     @Override
     @GetMapping(PathGetStaff)
-    public Staff getStaff(String staffId) {
+    public Staff getStaff(@PathVariable String staffId) {
         return service.getStaff(staffId).orElse(null);
     }
     
     /** {@inheritDoc} */
     @Override
     @GetMapping(PathFindStaffAuthority)
-    public List<StaffAuthority> findStaffAuthority(String staffId) {
+    public List<StaffAuthority> findStaffAuthority(@PathVariable String staffId) {
         return service.findStaffAuthority(staffId);
     }
     
