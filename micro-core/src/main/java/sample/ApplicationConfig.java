@@ -1,6 +1,5 @@
 package sample;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -27,8 +26,6 @@ public class ApplicationConfig {
     /** SpringMvcの拡張コンフィギュレーション */
     @Configuration
     static class WebMvcConfig {
-        @Autowired
-        private MessageSource message;
 
         /** HibernateのLazyLoading回避対応。  see JacksonAutoConfiguration */
         @Bean
@@ -38,7 +35,7 @@ public class ApplicationConfig {
 
         /** BeanValidationメッセージのUTF-8に対応したValidator。 */
         @Bean
-        LocalValidatorFactoryBean mvcValidator() {
+        LocalValidatorFactoryBean defaultValidator(MessageSource message) {
             LocalValidatorFactoryBean factory = new LocalValidatorFactoryBean();
             factory.setValidationMessageSource(message);
             return factory;
