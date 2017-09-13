@@ -220,7 +220,7 @@ Spring Boot では Executable Jar ( ライブラリや静的リソースなど�
 | `spring-boot-starter-*` | 1.5.+    | Spring Boot 基盤 (actuator/security/aop/cache/data-jpa/web) |
 | `ehcache`               | 3.2.+    | JCache 実装 |
 | `HikariCP`              | 2.6.+    | コネクションプーリング実装の組み立て用途 |
-| `jackson-datatype-*`    | 2.8.+    | JSON 変換時の Java8 / Hibernate 対応 |
+| `jackson-datatype-*`    | 2.9.+    | JSON 変換時の Java8 / Hibernate 対応 |
 | `commons-*`             | -        | 汎用ユーティリティライブラリ |
 | `icu4j-*`               | 59.+   | 文字変換ライブラリ |
 
