@@ -1,12 +1,9 @@
 package sample.context.orm;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
-import lombok.Data;
-import lombok.Value;
+import lombok.*;
 import sample.context.Dto;
 
 /**
@@ -14,11 +11,13 @@ import sample.context.Dto;
  * 複数件のソート情報(SortOrder)を内包します。
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Sort implements Dto {
     private static final long serialVersionUID = 1L;
 
     /** ソート条件 */
-    private final List<SortOrder> orders = new ArrayList<SortOrder>();
+    private List<SortOrder> orders = new ArrayList<SortOrder>();
 
     /** ソート条件を追加します。 */
     public Sort add(SortOrder order) {
@@ -60,7 +59,9 @@ public class Sort implements Dto {
     }
 
     /** フィールド単位のソート情報を表現します。 */
-    @Value
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class SortOrder implements Serializable {
         private static final long serialVersionUID = 1L;
         private String property;

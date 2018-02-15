@@ -2,7 +2,7 @@ package sample.context.orm;
 
 import java.util.List;
 
-import lombok.Value;
+import lombok.*;
 import sample.context.Dto;
 
 /**
@@ -10,7 +10,9 @@ import sample.context.Dto;
  * 
  * @param <T> 結果オブジェクト(一覧の要素)
  */
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PagingList<T> implements Dto {
     private static final long serialVersionUID = 1L;
 
