@@ -3,7 +3,7 @@ buildscript {
     springCloudVersion = 'Edgware.SR2'
     springBootVersion = '1.5.10.RELEASE'
   }
-  ext["hibernate.version"] = "5.2.12.Final" 
+  ext["hibernate.version"] = "5.2.13.Final" 
   repositories {
     jcenter()
   }
@@ -13,7 +13,7 @@ buildscript {
 }
 
 allprojects {
-  version = "1.6.1"
+  version = "1.6.2"
 }
 
 subprojects {
@@ -52,8 +52,8 @@ subprojects {
     
   dependencies {
     compileOnly "org.projectlombok:lombok:1.16.20"
-    compile "org.springframework.cloud:spring-cloud-starter-eureka"
-    compile "org.springframework.cloud:spring-cloud-starter-feign"
+    compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
+    compile "org.springframework.cloud:spring-cloud-starter-openfeign"
     compile "org.springframework.cloud:spring-cloud-starter-sleuth"
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-security"

@@ -35,8 +35,8 @@ management:
 
 eureka:
   instance:
-    status-page-url-path: ${management.context-path}/info
-    health-check-url-path: ${management.context-path}/health
+    status-page-url-path: /info
+    health-check-url-path: /health
   client:
     enabled: true
     register-with-eureka: true

@@ -3,6 +3,6 @@ bootRepackage {
 }
 
 dependencies {
-  compile "org.springframework.cloud:spring-cloud-starter-eureka-server"
+  compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-server"
   compile "com.h2database:h2:1.4.195"
 }
