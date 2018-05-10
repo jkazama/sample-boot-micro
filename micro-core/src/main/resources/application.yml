@@ -3,7 +3,7 @@ spring:
   application.name: sample-boot-micro
   aop.proxy-target-class: true
   messages.basename: messages-validation, messages
-  cache.jcache.config: ehcache.xml
+  cache.jcache.config: classpath:ehcache.xml
   jackson:
     serialization:
       indent-output: true

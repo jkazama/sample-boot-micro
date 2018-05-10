@@ -1,9 +1,9 @@
 buildscript {
   ext {
-    springCloudVersion = 'Edgware.SR2'
-    springBootVersion = '1.5.10.RELEASE'
+    springCloudVersion = 'Edgware.SR3'
+    springBootVersion = '1.5.13.RELEASE'
   }
-  ext["hibernate.version"] = "5.2.13.Final" 
+  ext["hibernate.version"] = "5.2.17.Final" 
   repositories {
     jcenter()
   }
@@ -13,7 +13,7 @@ buildscript {
 }
 
 allprojects {
-  version = "1.6.2"
+  version = "1.7.0"
 }
 
 subprojects {
@@ -100,5 +100,5 @@ project(':micro-web') {
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion = "4.5"
+  gradleVersion = "4.7"
 }
