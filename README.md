@@ -147,7 +147,7 @@ main
 1. ブラウザを立ち上げて 「 http://localhost:8761/ 」 で状態を確認
 1. *MicroApp.java* に対し 「 右クリック -> Run As -> Java Application 」
 1. *Console* タブに 「 Started Application 」 という文字列が出力されればポート 8090 で起動が完了
-1. ブラウザを立ち上げて 「 http://localhost:8090/ 」 で状態を確認 ( Spring Admin )
+1. ブラウザを立ち上げて 「 http://localhost:8090/api/management/health 」 で状態を確認
 1. *MicroAsset.java* に対し 「 右クリック -> Run As -> Java Application 」
 1. *Console* タブに 「 Started Application 」 という文字列が出力されればポート 8100 で起動が完了
 1. ブラウザを立ち上げて 「 http://localhost:8100/api/management/health 」 で状態を確認
@@ -216,13 +216,8 @@ Spring Boot では Executable Jar ( ライブラリや静的リソースなど�
 
 | ライブラリ               | バージョン | 用途/追加理由 |
 | ----------------------- | -------- | ------------- |
-| `spring-cloud`          | Edgware.+ | Spring Cloud 基盤 |
-| `spring-boot-starter-*` | 1.5.+    | Spring Boot 基盤 (actuator/security/aop/cache/data-jpa/web) |
-| `ehcache`               | 3.3.+    | JCache 実装 |
-| `HikariCP`              | 2.7.+    | コネクションプーリング実装の組み立て用途 |
-| `jackson-datatype-*`    | 2.9.+    | JSON 変換時の Java8 / Hibernate 対応 |
-| `commons-*`             | -        | 汎用ユーティリティライブラリ |
-| `icu4j-*`               | 60.+   | 文字変換ライブラリ |
+| `spring-cloud`          | Finchley.+ | Spring Cloud 基盤 |
+| `spring-boot-starter-*` | 2.0.+    | Spring Boot 基盤 (actuator/security/aop/cache/data-jpa/web) |
 
 > 実際の詳細な定義は `build.gradle` を参照してください
 
@@ -274,7 +269,7 @@ Eureka + Ribbon を利用して、シンプルに RestTemplate を用いてい�
 
 #### テスト
 
-パターンとしては通常の Spring コンテナを用いる 2 パターン ( WebMock テスト / コンテナテスト ) と、 Hibernate だけに閉じた実行時間に優れたテスト ( Entity のみが対象 ) の合計 3 パターンで考えます。 （ それぞれ基底クラスは `WebTestSupport` / `UnitTestSupport` / `EntityTestSupport` ）  
+現状 Entity 検証のみを提供しています。基底クラスに利用している `EntityTestSupport` は Spring に依存しない JPA (Hibernate) に閉じた単体検証を可能にします。 (単体検証時の実行時間を優先)
 
 ### License
 

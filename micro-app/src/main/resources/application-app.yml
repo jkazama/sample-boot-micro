@@ -3,7 +3,7 @@ spring:
   profiles: app
   application.name: micro-app
   boot.admin:
-    discovery.converter.management-context-path: ${management.context-path}
+    discovery.converter.management-context-path: ${management.endpoints.web.base-path}
 
 server:
   port: 8090

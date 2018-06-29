@@ -1,4 +1,5 @@
-bootRepackage {
-  mainClass = 'sample.microasset.MicroAsset'
+bootJar {
+  mainClassName = 'sample.microasset.MicroAsset'
   classifier = 'exec'
 }
+

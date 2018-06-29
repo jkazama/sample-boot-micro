@@ -53,12 +53,12 @@ public class AssetAdminService extends ServiceSupport {
                 try {
                     cio.process(repAsset);
                     //low: SQLの発行担保。扱う情報に相互依存が無く、セッションキャッシュはリークしがちなので都度消しておく。
-                    rep.flushAndClear();
+                    repAsset.flushAndClear();
                 } catch (Exception e) {
                     logger.error("[" + cio.getId() + "] 振込出金依頼の締め処理に失敗しました。", e);
                     try {
                         cio.error(repAsset);
-                        rep.flush();
+                        repAsset.flush();
                     } catch (Exception ex) {
                         //low: 2重障害(恐らくDB起因)なのでloggerのみの記載に留める
                     }

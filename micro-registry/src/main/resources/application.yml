@@ -1,31 +1,31 @@
 ---
 spring:
   application.name: micro-registry
-  aop.proxy-target-class: true
-  jackson:
-    serialization:
+  banner.location: banner.txt
+  jackson.serialization:
       indent-output: true
-      write-dates-as-timestamps: false
-
-banner.location: banner.txt
+  jpa.open-in-view: false
+  security.user.password: unused
+  autoconfigure.exclude:
+    - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 
 server:
   port: 8761
-
-security:
-  user.password: unused
-  basic.enabled: false
+  error:
+    whitelabel.enabled: false
+    path: /api/error
 
 management:
-  context-path: /api/management
-  security.enabled: false
+  endpoints.web:
+    base-path: /management
+    exposure.include: "*"
 
 eureka:
   instance:
     hostname: localhost
     lease-renewal-interval-in-seconds: 5
-    status-page-url-path: ${management.context-path}/info
-    health-check-url-path: ${management.context-path}/health
+    status-page-url-path: ${management.endpoints.web.base-path}/info
+    health-check-url-path: ${management.endpoints.web.base-path}/health
     prefer-ip-address: true
   client:
     register-with-eureka: false
@@ -36,8 +36,6 @@ extension.test.db.enabled: true
 ---
 spring:
   profiles: production
-
-management.security.enabled: true
 
 extension:
   security.cors.enabled: false

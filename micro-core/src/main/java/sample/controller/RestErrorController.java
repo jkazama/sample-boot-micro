@@ -2,13 +2,10 @@ package sample.controller;
 
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.*;
+import org.springframework.boot.web.servlet.error.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.*;
+import org.springframework.web.context.request.ServletWebRequest;
 
 /**
  * REST用の例外ハンドリングを行うController。
@@ -20,16 +17,8 @@ import org.springframework.web.context.request.*;
 public class RestErrorController implements ErrorController {
     public static final String PathError = "/api/error";
 
-    @Autowired(required = false)
+    @Autowired
     private ErrorAttributes errorAttributes;
-    
-    @PostConstruct
-    public RestErrorController build() {
-        if (errorAttributes == null) {
-            errorAttributes = new DefaultErrorAttributes();
-        }
-        return this;
-    }
 
     @Override
     public String getErrorPath() {
@@ -37,9 +26,8 @@ public class RestErrorController implements ErrorController {
     }
 
     @RequestMapping(PathError)
-    public Map<String, Object> error(HttpServletRequest request) {
-        RequestAttributes requestAttributes = new ServletRequestAttributes(request);
-        return this.errorAttributes.getErrorAttributes(requestAttributes, false);
+    public Map<String, Object> error(ServletWebRequest request) {
+        return this.errorAttributes.getErrorAttributes(request, false);
     }
 
 }
