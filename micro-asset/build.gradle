@@ -2,4 +2,4 @@ bootJar {
   mainClassName = 'sample.microasset.MicroAsset'
   classifier = 'exec'
 }
-
+jar.enabled=true
