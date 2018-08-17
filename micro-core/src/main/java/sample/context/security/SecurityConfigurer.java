@@ -1,40 +1,34 @@
 package sample.context.security;
 
 import java.io.IOException;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.eclipse.collections.impl.list.fixed.ArrayAdapter;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.boot.autoconfigure.web.servlet.*;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.builders.*;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.*;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.security.web.authentication.logout.*;
+import org.springframework.web.filter.*;
 
 import lombok.*;
 import sample.ValidationException.ErrorKeys;
 import sample.context.actor.ActorSession;
-import sample.context.security.SecurityActorFinder.ActorDetails;
-import sample.context.security.SecurityActorFinder.SecurityActorService;
+import sample.context.security.SecurityActorFinder.*;
 
 /**
  * Spring Security(認証/認可)全般の設定を行います。
@@ -49,9 +43,6 @@ import sample.context.security.SecurityActorFinder.SecurityActorService;
 @Getter
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
-    /** Spring Boot のサーバ情報 */
-    @Autowired
-    private ServerProperties serverProps;
     /** 拡張セキュリティ情報 */
     @Autowired
     private SecurityProperties props;
@@ -85,6 +76,11 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Autowired(required = false)
     private SecurityFilters filters;
 
+    /** 適用対象となる DistpatcherServlet 登録情報 */
+    @Autowired
+    @Qualifier(DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_REGISTRATION_BEAN_NAME)
+    private DispatcherServletRegistrationBean dispatcherServletRegistration;
+
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.eraseCredentials(true).authenticationProvider(securityProvider);
@@ -98,7 +94,9 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(
-                serverProps.getServlet().getPathsArray(props.auth().getIgnorePath()));
+                ArrayAdapter.adapt(props.auth().getIgnorePath())
+                .collect(dispatcherServletRegistration::getRelativePath)
+                .toArray(new String[0]));
     }
 
     @Override

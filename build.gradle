@@ -1,7 +1,7 @@
 buildscript {
   ext {
-    springCloudVersion = 'Finchley.RELEASE'
-    springBootVersion = '2.0.3.RELEASE'
+    springCloudVersion = 'Finchley.SR1'
+    springBootVersion = '2.0.4.RELEASE'
     lombokVersion = "1.16.20"
   }
   repositories {
@@ -13,7 +13,7 @@ buildscript {
 }
 
 allprojects {
-  version = "2.0.0"
+  version = "2.0.1"
 }
 
 subprojects {
@@ -54,7 +54,9 @@ subprojects {
   }
     
   dependencies {
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
     compile "org.springframework.cloud:spring-cloud-starter-openfeign"
@@ -102,5 +104,5 @@ project(':micro-web') {
 }
 
 wrapper {
-  gradleVersion = "4.8.1"
+  gradleVersion = "4.9"
 }
