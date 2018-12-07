@@ -7,7 +7,8 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import sample.api.RestInvokerSupport;
+import sample.api.*;
+import sample.context.rest.RestInvoker;
 import sample.microasset.api.admin.AssetAdminFacade;
 import sample.microasset.model.asset.CashInOut;
 import sample.microasset.model.asset.CashInOut.FindCashInOut;
@@ -16,27 +17,26 @@ import sample.microasset.model.asset.CashInOut.FindCashInOut;
  * 資産系社内ユースケースの API 実行処理を表現します。
  */
 @Component
-public class AssetAdminFacadeInvoker extends RestInvokerSupport implements AssetAdminFacade {
+public class AssetAdminFacadeInvoker implements AssetAdminFacade {
 
-    @Value("${extension.remoting.asset}")
-    String applicationName;
-    
-    /** {@inheritDoc} */
-    @Override
-    public String applicationName() {
-        return applicationName;
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    public String rootPath() {
-        return Path;
+    private final ApiClient client;
+    private final String appliationName;
+
+    public AssetAdminFacadeInvoker(
+            ApiClient client,
+            @Value("${extension.remoting.asset}") String applicationName) {
+        this.client = client;
+        this.appliationName = applicationName;
     }
     
     /** {@inheritDoc} */
     @Override
     public List<CashInOut> findCashInOut(FindCashInOut p) {
         return invoker().get(PathFindCashInOut, new ParameterizedTypeReference<List<CashInOut>>() {}, p);
+    }
+    
+    private RestInvoker invoker() {
+        return client.invoker(appliationName, Path);
     }
     
     /** {@inheritDoc} */
