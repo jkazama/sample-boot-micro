@@ -225,7 +225,7 @@ Spring Boot では Executable Jar ( ライブラリや静的リソースなど�
 | ライブラリ               | バージョン | 用途/追加理由 |
 | ----------------------- | -------- | ------------- |
 | `spring-cloud`          | Finchley.+ | Spring Cloud 基盤 |
-| `spring-boot-starter-*` | 2.0.+    | Spring Boot 基盤 (actuator/security/aop/cache/data-jpa/web) |
+| `spring-boot-starter-*` | 2.1.+    | Spring Boot 基盤 (actuator/security/aop/cache/data-jpa/web) |
 
 > 実際の詳細な定義は `build.gradle` を参照してください
 
