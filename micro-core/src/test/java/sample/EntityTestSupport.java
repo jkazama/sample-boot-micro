@@ -4,7 +4,7 @@ import java.time.Clock;
 import java.util.*;
 import java.util.function.Supplier;
 
-import javax.persistence.*;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.junit.*;
@@ -15,13 +15,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import sample.context.*;
-import sample.context.Entity;
 import sample.context.actor.ActorSession;
 import sample.context.orm.*;
 import sample.context.orm.DefaultRepository.DefaultDataSourceProperties;
 import sample.model.*;
 import sample.model.BusinessDayHandler.HolidayAccessor;
-import sample.support.*;
+import sample.support.MockDomainHelper;
 
 /**
  * Spring コンテナを用いない JPA のみに特化した検証用途。
@@ -50,7 +49,7 @@ public class EntityTestSupport {
         dh = new MockDomainHelper(clock);
         time = dh.time();
         session = dh.actorSession();
-        businessDay = new BusinessDayHandler(time, new HolidayAccessor(rep));
+        businessDay = new BusinessDayHandler(time, new HolidayAccessor(txm, rep));
         encoder = new BCryptPasswordEncoder();
         setupRepository();
         setupDataFixtures();
@@ -107,8 +106,8 @@ public class EntityTestSupport {
     protected void setupRepository() {
         setupEntityManagerFactory();
         rep = new DefaultRepository();
-        rep.setDh(dh);
-        rep.setInterceptor(entityInterceptor());
+        rep.setDh(SimpleObjectProvider.of(dh));
+        rep.setInterceptor(SimpleObjectProvider.of(entityInterceptor()));
         rep.setEm(SharedEntityManagerCreator.createSharedEntityManager(emf));
     }
 

@@ -6,7 +6,6 @@ import java.util.*;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +16,6 @@ import sample.api.admin.MasterAdminFacade;
 import sample.context.actor.Actor;
 import sample.context.security.*;
 import sample.context.security.SecurityActorFinder.ActorDetails;
-import sample.controller.ControllerSupport;
 import sample.model.master.Holiday.RegHoliday;
 
 /**
@@ -25,13 +23,15 @@ import sample.model.master.Holiday.RegHoliday;
  */
 @RestController
 @RequestMapping(Path)
-@Setter
-public class MasterAdminController extends ControllerSupport {
+public class MasterAdminController {
 
-    @Autowired
-    MasterAdminFacade facade;
-    @Autowired
-    SecurityProperties securityProps;
+    private final SecurityProperties securityProps;
+    private final MasterAdminFacade facade;
+    
+    public MasterAdminController(SecurityProperties securityProps, MasterAdminFacade facade) {
+        this.securityProps = securityProps;
+        this.facade = facade;
+    }
 
     /** 社員ログイン状態を確認します。 */
     @RequestMapping("/loginStatus")

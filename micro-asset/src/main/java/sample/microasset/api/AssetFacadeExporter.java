@@ -6,11 +6,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import sample.api.RestExporterSupport;
+import sample.api.ApiUtils;
 import sample.microasset.model.asset.CashInOut;
 import sample.microasset.model.asset.CashInOut.RegCashOut;
 import sample.microasset.usecase.AssetService;
@@ -20,10 +19,13 @@ import sample.microasset.usecase.AssetService;
  */
 @RestController
 @RequestMapping(Path)
-public class AssetFacadeExporter extends RestExporterSupport implements AssetFacade {
+public class AssetFacadeExporter implements AssetFacade {
 
-    @Autowired
-    AssetService service;
+    private final AssetService service;
+    
+    public AssetFacadeExporter(AssetService service) {
+        this.service = service;
+    }
     
     /** {@inheritDoc} */
     @Override
@@ -36,7 +38,7 @@ public class AssetFacadeExporter extends RestExporterSupport implements AssetFac
     @Override
     @PostMapping(PathWithdraw)
     public ResponseEntity<Long> withdraw(@RequestBody @Valid RegCashOut p) {
-        return result(() -> service.withdraw(p));
+        return ApiUtils.result(() -> service.withdraw(p));
     }
     
 }

@@ -1,9 +1,11 @@
 package sample.microasset;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.actuate.health.*;
 import org.springframework.boot.actuate.health.Health.Builder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.*;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import sample.*;
 import sample.context.Timestamper;
@@ -34,8 +36,11 @@ public class MicroAssetConfig {
         
         /** 休日情報アクセサ */
         @Bean
-        HolidayAccessor holidayAccessor(DefaultRepository rep) {
-            return new HolidayAccessor(rep);
+        HolidayAccessor holidayAccessor(
+                DefaultRepository rep,
+                @Qualifier(DefaultRepository.BeanNameTx)
+                PlatformTransactionManager txm) {
+            return new HolidayAccessor(txm, rep);
         }
         
         /** 営業日ユーティリティ */

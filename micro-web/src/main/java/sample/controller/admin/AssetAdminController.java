@@ -6,10 +6,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import sample.controller.ControllerSupport;
 import sample.microasset.api.admin.AssetAdminFacade;
 import sample.microasset.model.asset.CashInOut;
 import sample.microasset.model.asset.CashInOut.FindCashInOut;
@@ -19,10 +17,13 @@ import sample.microasset.model.asset.CashInOut.FindCashInOut;
  */
 @RestController
 @RequestMapping(Path)
-public class AssetAdminController extends ControllerSupport {
+public class AssetAdminController {
 
-    @Autowired
-    AssetAdminFacade facade;
+    private final AssetAdminFacade facade;
+
+    public AssetAdminController(AssetAdminFacade facade) {
+        this.facade = facade;
+    }
 
     /** 未処理の振込依頼情報を検索します。 */
     @GetMapping(PathFindCashInOut)

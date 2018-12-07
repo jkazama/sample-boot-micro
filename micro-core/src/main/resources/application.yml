@@ -10,9 +10,6 @@ spring:
     max-file-size: 20MB
     max-request-size: 20MB
   jpa.open-in-view: false
-  security.user.password: unused
-  autoconfigure.exclude:
-    - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 
 logging.config: classpath:logback-spring.xml
 
@@ -32,8 +29,8 @@ management:
 
 eureka:
   instance:
-    status-page-url-path: /info
-    health-check-url-path: /health
+    status-page-url-path: ${management.endpoints.web.base-path}/info
+    health-check-url-path: ${management.endpoints.web.base-path}/health
   client:
     enabled: true
     register-with-eureka: true
@@ -42,6 +39,7 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
 
 extension:
+  security.auth.enabled: false
   datasource:
     default:
       url: jdbc:h2:tcp://localhost:9092/mem:testdb

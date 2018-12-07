@@ -1,22 +1,20 @@
-buildscript {
-  ext {
-    springCloudVersion = 'Finchley.SR1'
-    springBootVersion = '2.0.4.RELEASE'
-    lombokVersion = "1.16.20"
-  }
-  repositories {
-    jcenter()
-  }
-  dependencies {
-    classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-  }
+plugins {
+    id "org.springframework.boot" version "2.1.1.RELEASE"
+    id "io.spring.dependency-management" version "1.0.6.RELEASE"
 }
 
+ext.spring_cloud_version = "Finchley.SR2"
+ext['lombok.version'] = "1.18.4"
+
 allprojects {
-  version = "2.0.1"
+  repositories {
+    jcenter() 
+  }
 }
 
 subprojects {
+  version = "2.1.1"
+
   apply plugin: "java"
   apply plugin: "org.springframework.boot"
   apply plugin: "io.spring.dependency-management"
@@ -42,67 +40,62 @@ subprojects {
     buildInfo()
   }
 
-  repositories {
-    jcenter()
-  }
-
   dependencyManagement {
     imports {
-      mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-      mavenBom "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
+      mavenBom "org.springframework.cloud:spring-cloud-dependencies:${spring_cloud_version}"
+      mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
     }
   }
-    
+
   dependencies {
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok"
     compileOnly "org.springframework.boot:spring-boot-configuration-processor"
-    compileOnly "org.projectlombok:lombok:${lombokVersion}"
-    compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
-    compile "org.springframework.cloud:spring-cloud-starter-openfeign"
-    compile "org.springframework.cloud:spring-cloud-starter-sleuth"
-    compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile "org.springframework.boot:spring-boot-starter-security"
-    compile "org.springframework.boot:spring-boot-starter-aop"
-    compile "org.springframework.boot:spring-boot-starter-cache"
-    compile "org.springframework.boot:spring-boot-starter-data-jpa"
-    compile "org.springframework.boot:spring-boot-starter-web"
-    compile "org.ehcache:ehcache"
-    compile "javax.cache:cache-api"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5"
-    compile "org.eclipse.collections:eclipse-collections:9.2.0"
-    compile "org.eclipse.collections:eclipse-collections-api:9.2.0"
-    compile "commons-io:commons-io:2.6"
-    compile "org.apache.commons:commons-lang3"
-    compile "com.ibm.icu:icu4j:62.1"
-    compile "org.jolokia:jolokia-core:1.6.0"
-    compile fileTree(dir: 'libs', includes: ['*.jar'])
+    compileOnly "org.projectlombok:lombok"
+    implementation "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
+    implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
+    implementation "org.springframework.cloud:spring-cloud-starter-sleuth"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.boot:spring-boot-starter-aop"
+    implementation "org.springframework.boot:spring-boot-starter-cache"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.ehcache:ehcache"
+    implementation "javax.cache:cache-api"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5"
+    implementation "org.eclipse.collections:eclipse-collections:9.2.0"
+    implementation "org.eclipse.collections:eclipse-collections-api:9.2.0"
+    implementation "commons-io:commons-io:2.6"
+    implementation "org.apache.commons:commons-lang3"
+    implementation "com.ibm.icu:icu4j:63.1"
+    implementation fileTree(dir: 'libs', includes: ['*.jar'])
     runtime "com.h2database:h2"
-    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
-    testCompile "org.springframework.boot:spring-boot-starter-test"
+    testAnnotationProcessor "org.projectlombok:lombok"
+    testCompileOnly "org.projectlombok:lombok"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
   }
 }
 
 project(':micro-app') {
   dependencies {
-    compile project(':micro-core')
+    implementation project(':micro-core')
   }
 }
 
 project(':micro-asset') {
   dependencies {
-    compile project(':micro-core')
+    implementation project(':micro-core')
   }
 }
 
 project(':micro-web') {
   dependencies {
-    compile project(':micro-core')
-    compile project(':micro-asset')
+    implementation project(':micro-core')
+    implementation project(':micro-asset')
   }
 }
 
 wrapper {
-  gradleVersion = "4.9"
+  gradleVersion = "5.0"
 }

@@ -53,7 +53,7 @@ public class SecurityService {
 
     /** 社内管理向けの利用者情報を提供します。(see SecurityActorFinder) */
     @Bean
-    @ConditionalOnProperty(prefix = "extension.security.auth", name = "admin", matchIfMissing = false)
+    @ConditionalOnProperty(name = "extension.security.auth.admin", havingValue = "true", matchIfMissing = false)
     public SecurityAdminService securityAdminService(final SecurityDataHandler handler) {
         return new SecurityAdminService() {
             /**

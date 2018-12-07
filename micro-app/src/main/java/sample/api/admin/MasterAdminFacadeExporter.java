@@ -2,15 +2,14 @@ package sample.api.admin;
 
 import static sample.api.admin.MasterAdminFacade.Path;
 
-import java.util.*;
+import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import sample.api.RestExporterSupport;
+import sample.api.ApiUtils;
 import sample.model.master.*;
 import sample.model.master.Holiday.RegHoliday;
 import sample.usecase.MasterAdminService;
@@ -20,10 +19,13 @@ import sample.usecase.MasterAdminService;
  */
 @RestController
 @RequestMapping(Path)
-public class MasterAdminFacadeExporter extends RestExporterSupport implements MasterAdminFacade {
+public class MasterAdminFacadeExporter implements MasterAdminFacade {
 
-    @Autowired
-    MasterAdminService service;
+    private final MasterAdminService service;
+    
+    public MasterAdminFacadeExporter(MasterAdminService service) {
+        this.service = service;
+    }
     
     /** {@inheritDoc} */
     @Override
@@ -43,7 +45,7 @@ public class MasterAdminFacadeExporter extends RestExporterSupport implements Ma
     @Override
     @PostMapping(PathRegisterHoliday)
     public ResponseEntity<Void> registerHoliday(@RequestBody @Valid RegHoliday p) {
-        return resultEmpty(() -> service.registerHoliday(p));
+        return ApiUtils.resultEmpty(() -> service.registerHoliday(p));
     }
     
 }

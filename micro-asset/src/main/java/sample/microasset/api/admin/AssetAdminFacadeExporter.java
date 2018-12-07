@@ -6,11 +6,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import sample.api.RestExporterSupport;
+import sample.api.ApiUtils;
 import sample.microasset.model.asset.CashInOut;
 import sample.microasset.model.asset.CashInOut.FindCashInOut;
 import sample.microasset.usecase.AssetAdminService;
@@ -20,10 +19,13 @@ import sample.microasset.usecase.AssetAdminService;
  */
 @RestController
 @RequestMapping(Path)
-public class AssetAdminFacadeExporter extends RestExporterSupport implements AssetAdminFacade {
+public class AssetAdminFacadeExporter implements AssetAdminFacade {
 
-    @Autowired
-    AssetAdminService service;
+    private final AssetAdminService service;
+    
+    public AssetAdminFacadeExporter(AssetAdminService service) {
+        this.service = service;
+    }
     
     /** {@inheritDoc} */
     @Override
@@ -36,14 +38,14 @@ public class AssetAdminFacadeExporter extends RestExporterSupport implements Ass
     @Override
     @PostMapping(PathClosingCashOut)
     public ResponseEntity<Void> closingCashOut() {
-        return resultEmpty(() -> service.closingCashOut());
+        return ApiUtils.resultEmpty(() -> service.closingCashOut());
     }
     
     /** {@inheritDoc} */
     @Override
     @PostMapping(PathRealizeCashflow)
     public ResponseEntity<Void> realizeCashflow() {
-        return resultEmpty(() -> service.realizeCashflow());
+        return ApiUtils.resultEmpty(() -> service.realizeCashflow());
     }
 
 }

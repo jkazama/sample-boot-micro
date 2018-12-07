@@ -3,6 +3,6 @@ bootJar {
 }
 
 dependencies {
-  compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-server"
-  compile "com.h2database:h2"
+  implementation "org.springframework.cloud:spring-cloud-starter-netflix-eureka-server"
+  implementation "com.h2database:h2"
 }

@@ -10,10 +10,8 @@ import org.eclipse.collections.impl.list.fixed.ArrayAdapter;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.autoconfigure.web.servlet.*;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.*;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.*;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -48,23 +46,12 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     private SecurityProperties props;
     /** 認証/認可利用者サービス */
     @Autowired
-    @Lazy
     private SecurityActorFinder actorFinder;
-    /** カスタム認証プロバイダ */
-    @Autowired
-    @Lazy
-    private SecurityProvider securityProvider;
-    /** カスタム認証マネージャ */
-    @Autowired
-    @Lazy
-    private AuthenticationManager authenticationManager;
     /** カスタムエントリポイント(例外対応) */
     @Autowired
-    @Lazy
     private SecurityEntryPoint entryPoint;
     /** ログイン/ログアウト時の拡張ハンドラ */
     @Autowired
-    @Lazy
     private LoginHandler loginHandler;
     /** ThreadLocalスコープの利用者セッション */
     @Autowired
@@ -72,31 +59,18 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     /** CORS利用時のフィルタ */
     @Autowired(required = false)
     private CorsFilter corsFilter;
-    /** 認証配下に置くServletFilter */
-    @Autowired(required = false)
-    private SecurityFilters filters;
-
+    
     /** 適用対象となる DistpatcherServlet 登録情報 */
     @Autowired
     @Qualifier(DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_REGISTRATION_BEAN_NAME)
     private DispatcherServletRegistrationBean dispatcherServletRegistration;
 
     @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.eraseCredentials(true).authenticationProvider(securityProvider);
-    }
-
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
-    @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(
+        web.ignoring().mvcMatchers(
                 ArrayAdapter.adapt(props.auth().getIgnorePath())
-                .collect(dispatcherServletRegistration::getRelativePath)
-                .toArray(new String[0]));
+                    .collect(dispatcherServletRegistration::getRelativePath)
+                    .toArray(new String[0]));
     }
 
     @Override
@@ -104,13 +78,21 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         // Target URL
         http
             .authorizeRequests()
-            .antMatchers(props.auth().getExcludesPath()).permitAll();
-        http
-            .csrf().disable()
-            .authorizeRequests()
-            .antMatchers(props.auth().getPathAdmin()).hasRole("ADMIN")
-            .antMatchers(props.auth().getPath()).hasRole("USER");
-        // common
+            .mvcMatchers(props.auth().getExcludesPath()).permitAll();
+        if (this.props.auth().isEnabled()) {
+            http
+                .csrf().disable()            
+                .authorizeRequests()
+                .mvcMatchers(props.auth().getPathAdmin()).hasRole("ADMIN")
+                .mvcMatchers(props.auth().getPath()).hasRole("USER");            
+        } else {
+            http
+                .csrf().disable()            
+                .authorizeRequests()
+                .mvcMatchers("/**").permitAll();
+        }
+        
+        // Common
         http
             .exceptionHandling().authenticationEntryPoint(entryPoint);
         http
@@ -122,11 +104,6 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
             .addFilterAfter(new ActorSessionFilter(actorSession), UsernamePasswordAuthenticationFilter.class);
         if (corsFilter != null) {
             http.addFilterBefore(corsFilter, LogoutFilter.class);
-        }
-        if (filters != null) {
-            for (Filter filter : filters.filters()) {
-                http.addFilterAfter(filter, ActorSessionFilter.class);
-            }
         }
 
         // login/logout
@@ -149,7 +126,6 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         @Autowired
         private SecurityActorFinder actorFinder;
         @Autowired
-        @Lazy
         private PasswordEncoder encoder;
 
         @Override
@@ -187,11 +163,23 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         @Override
         public void commence(HttpServletRequest request, HttpServletResponse response,
                 AuthenticationException authException) throws IOException, ServletException {
-            String message = msg.getMessage(ErrorKeys.Authentication, new Object[0], Locale.getDefault());
-            if (authException instanceof InsufficientAuthenticationException) {
-                message = msg.getMessage(ErrorKeys.AccessDenied, new Object[0], Locale.getDefault());
+            if (response.isCommitted()) {
+                return;
             }
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, message);
+            if (authException instanceof InsufficientAuthenticationException) {
+                String message = msg.getMessage(ErrorKeys.AccessDenied, new Object[0], Locale.getDefault());
+                writeReponseEmpty(response, HttpServletResponse.SC_FORBIDDEN, message);
+            } else {
+                String message = msg.getMessage(ErrorKeys.Authentication, new Object[0], Locale.getDefault());
+                writeReponseEmpty(response, HttpServletResponse.SC_UNAUTHORIZED, message);
+            }
+        }
+        
+        private void writeReponseEmpty(HttpServletResponse response, int status, String message) throws IOException {
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setStatus(status);
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"message\": \"" + message + "\"}");
         }
     }
 
@@ -238,8 +226,9 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 Authentication authentication) throws IOException, ServletException {
             Optional.ofNullable((ActorDetails) authentication.getDetails()).ifPresent(
                     (detail) -> detail.bindRequestInfo(request));
-            if (response.isCommitted())
+            if (response.isCommitted()) {
                 return;
+            }
             writeReponseEmpty(response, HttpServletResponse.SC_OK);
         }
 
@@ -247,8 +236,9 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         @Override
         public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                 AuthenticationException exception) throws IOException, ServletException {
-            if (response.isCommitted())
+            if (response.isCommitted()) {
                 return;
+            }
             writeReponseEmpty(response, HttpServletResponse.SC_BAD_REQUEST);
         }
 
@@ -257,8 +247,9 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
                 Authentication authentication)
                         throws IOException, ServletException {
-            if (response.isCommitted())
+            if (response.isCommitted()) {
                 return;
+            }
             writeReponseEmpty(response, HttpServletResponse.SC_OK);
         }
 

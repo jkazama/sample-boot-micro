@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,17 +16,19 @@ import sample.context.audit.*;
 import sample.context.audit.AuditActor.FindAuditActor;
 import sample.context.audit.AuditEvent.FindAuditEvent;
 import sample.context.orm.PagingList;
-import sample.controller.ControllerSupport;
 
 /**
  * システムに関わる社内のUI要求を処理します。
  */
 @RestController
 @RequestMapping(Path)
-public class SystemAdminController extends ControllerSupport {
+public class SystemAdminController {
 
-    @Autowired
-    SystemAdminFacade facade;
+    private final SystemAdminFacade facade;
+    
+    public SystemAdminController(SystemAdminFacade facade) {
+        this.facade = facade;
+    }
 
     /** 利用者監査ログを検索します。 */
     @GetMapping(PathFindAudiActor)

@@ -1,9 +1,11 @@
 package sample;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.actuate.health.*;
 import org.springframework.boot.actuate.health.Health.Builder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.*;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import sample.context.Timestamper;
 import sample.context.actor.ActorSession;
@@ -32,14 +34,17 @@ public class MicroAppConfig {
         
         /** 休日情報アクセサ */
         @Bean
-        HolidayAccessor holidayAccessor(DefaultRepository rep) {
-            return new HolidayAccessor(rep);
+        HolidayAccessor holidayAccessor(
+                DefaultRepository rep,
+                @Qualifier(DefaultRepository.BeanNameTx)
+                PlatformTransactionManager txm) {
+            return new HolidayAccessor(txm, rep); //low: 定義側にスキーマ指定を委ねるときは外部から設定するアプローチで
         }
         
         /** 営業日ユーティリティ */
         @Bean
-        BusinessDayHandler businessDayHandler(Timestamper time, HolidayAccessor holidayAccessor) {
-            return new BusinessDayHandler(time, holidayAccessor);
+        BusinessDayHandler businessDayHandler(Timestamper time, HolidayAccessor holiday) {
+            return BusinessDayHandler.of(time, holiday);
         }
     }
     

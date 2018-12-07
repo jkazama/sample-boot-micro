@@ -7,13 +7,10 @@ spring:
   jpa.open-in-view: false
   security.user.password: unused
   autoconfigure.exclude:
-    - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+    - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 
 server:
   port: 8761
-  error:
-    whitelabel.enabled: false
-    path: /api/error
 
 management:
   endpoints.web:

@@ -8,6 +8,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 import org.springframework.context.annotation.*;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 /**
  * Eureka Server の起動クラス。
@@ -36,6 +38,19 @@ public class MicroRegistry {
                 throw new IllegalStateException(e);
             }
         }
+    }
+    
+    @Configuration
+    static class AuthSecurityConfig extends WebSecurityConfigurerAdapter {
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            // レジストリサーバでは認証を常に許可
+            http.csrf().disable()            
+                .authorizeRequests()
+                .mvcMatchers("/**").permitAll();
+        }
+
     }
 
 }

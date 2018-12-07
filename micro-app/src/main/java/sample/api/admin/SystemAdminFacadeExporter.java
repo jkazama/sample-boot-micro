@@ -1,16 +1,15 @@
 package sample.api.admin;
 
-import static sample.api.admin.SystemAdminFacade.*;
+import static sample.api.admin.SystemAdminFacade.Path;
 
 import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import sample.api.RestExporterSupport;
+import sample.api.ApiUtils;
 import sample.context.AppSetting;
 import sample.context.AppSetting.FindAppSetting;
 import sample.context.audit.*;
@@ -24,10 +23,13 @@ import sample.usecase.SystemAdminService;
  */
 @RestController
 @RequestMapping(Path)
-public class SystemAdminFacadeExporter extends RestExporterSupport implements SystemAdminFacade {
+public class SystemAdminFacadeExporter implements SystemAdminFacade {
 
-    @Autowired
-    SystemAdminService service;
+    private final SystemAdminService service;
+    
+    public SystemAdminFacadeExporter(SystemAdminService service) {
+        this.service = service;
+    }
     
     /** {@inheritDoc} */
     @Override
@@ -54,14 +56,14 @@ public class SystemAdminFacadeExporter extends RestExporterSupport implements Sy
     @Override
     @PostMapping(PathChangeAppSetting)
     public ResponseEntity<Void> changeAppSetting(String id, String value) {
-        return resultEmpty(() -> service.changeAppSetting(id, value));
+        return ApiUtils.resultEmpty(() -> service.changeAppSetting(id, value));
     }
     
     /** {@inheritDoc} */
     @Override
     @PostMapping(PathProcessDay)
     public ResponseEntity<Void> processDay() {
-        return resultEmpty(() -> service.processDay());
+        return ApiUtils.resultEmpty(() -> service.processDay());
     }
     
 }

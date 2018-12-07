@@ -1,12 +1,10 @@
 package sample.controller.system;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import sample.api.admin.SystemAdminFacade;
-import sample.controller.ControllerSupport;
-import sample.microasset.api.admin.*;
+import sample.microasset.api.admin.AssetAdminFacade;
 
 /**
  * システムジョブのUI要求を処理します。
@@ -16,13 +14,16 @@ import sample.microasset.api.admin.*;
  */
 @RestController
 @RequestMapping("/api/system/job")
-public class JobController extends ControllerSupport {
+public class JobController {
 
-    @Autowired
-    AssetAdminFacade asset;
-    @Autowired
-    SystemAdminFacade system;
+    private final AssetAdminFacade asset;
+    private final SystemAdminFacade system;
 
+    public JobController(AssetAdminFacade asset, SystemAdminFacade system) {
+        this.asset = asset;
+        this.system = system;
+    }
+    
     /** 営業日を進めます。 */
     @PostMapping("/daily/processDay")
     public ResponseEntity<Void> processDay() {

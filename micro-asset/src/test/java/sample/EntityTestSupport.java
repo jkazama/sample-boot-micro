@@ -4,7 +4,7 @@ import java.time.Clock;
 import java.util.*;
 import java.util.function.Supplier;
 
-import javax.persistence.*;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.junit.*;
@@ -15,14 +15,13 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import sample.context.*;
-import sample.context.Entity;
 import sample.context.actor.ActorSession;
 import sample.context.orm.*;
 import sample.context.orm.DefaultRepository.DefaultDataSourceProperties;
 import sample.microasset.context.orm.AssetRepository;
 import sample.microasset.model.AssetDataFixtures;
 import sample.model.*;
-import sample.support.*;
+import sample.support.MockDomainHelper;
 
 /**
  * Spring コンテナを用いない JPA のみに特化した検証用途。
@@ -110,13 +109,13 @@ public class EntityTestSupport {
     protected void setupRepository() {
         setupEntityManagerFactory();
         repDefault = new DefaultRepository();
-        repDefault.setDh(dh);
-        repDefault.setInterceptor(entityInterceptor());
+        repDefault.setDh(SimpleObjectProvider.of(dh));
+        repDefault.setInterceptor(SimpleObjectProvider.of(entityInterceptor()));
         repDefault.setEm(SharedEntityManagerCreator.createSharedEntityManager(emf));
         
         rep = new AssetRepository();
-        rep.setDh(dh);
-        rep.setInterceptor(entityInterceptor());
+        rep.setDh(SimpleObjectProvider.of(dh));
+        rep.setInterceptor(SimpleObjectProvider.of(entityInterceptor()));
         rep.setEm(SharedEntityManagerCreator.createSharedEntityManager(emf));
     }
 

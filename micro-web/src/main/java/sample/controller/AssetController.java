@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,10 +24,13 @@ import sample.microasset.model.asset.CashInOut.RegCashOut;
  */
 @RestController
 @RequestMapping(Path)
-public class AssetController extends ControllerSupport {
+public class AssetController {
     
-    @Autowired
-    AssetFacade facade;
+    private final AssetFacade facade;
+    
+    public AssetController(AssetFacade facade) {
+        this.facade = facade;
+    }
     
     /** 未処理の振込依頼情報を検索します。 */
     @GetMapping(PathFindUnprocessedCashOut)

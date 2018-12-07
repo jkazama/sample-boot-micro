@@ -20,7 +20,7 @@ import sample.controller.*;
  * <p>クラス側でコンポーネント定義していない時はこちらで明示的に記載してください。
  */
 @Configuration
-@Import({ApplicationDbConfig.class, ApplicationSeucrityConfig.class})
+@Import({ApplicationDbConfig.class, ApplicationSecurityConfig.class})
 public class ApplicationConfig {
     
     /** SpringMvcの拡張コンフィギュレーション */

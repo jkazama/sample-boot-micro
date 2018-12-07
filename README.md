@@ -35,12 +35,20 @@ UI 層の公開実装は通常 JSP や Thymeleaf を用いて行いますが、�
 Spring Boot は様々な利用方法が可能ですが、本サンプルでは以下のポリシーで利用します。
 
 - 設定ファイルは yml を用いる。 Bean 定義に xml 等の拡張ファイルは用いない。
-- インフラ層のコンポーネントは @Bean で、 それ以外のコンポーネントは @Component 等でベタに登録していく。
+- コンポーネントスキャンは UI 層とアプリケーション層のパッケージ配下に限定する
+    - スキャン対象軽減による起動時間の短縮と意図せぬ自動登録がおこなわれるリスクを避けるため
+    - 自動スキャン対象はなるべくコンストラクタインジェクションを前提に実装
+- インフラ層やドメイン層のコンポーネントは @Bean 等でベタに登録していく。
     - `ApplicationConfig` / `ApplicationDbConfig` / `ApplicationSecurityConfig`
 - 例外処理は終端 ( RestErrorAdvice / RestErrorCotroller ) で定義。 whitelabel 機能は無効化。
 - JPA 実装として Hibernate に特化。
+    - JpaRepository ではなく Entity との 1-n を可能にするスキーマ単位の Repository を利用
+- RESTfulAPI の受付は昔からよくある `application/x-www-form-urlencoded` で。
+    - 純粋なAPIアプリケーションであれば `application/json` の方が望ましい
 - Spring Security の認証方式はベーシック認証でなく、昔からよくある HttpSession で。
-- 基礎的なユーティリティで Spring がサポートしていないのは簡易な実装を用意。
+    - `SecurityConfigurer` の定義を参照
+- 基礎的なユーティリティで Spring がサポートしていないものは簡易な実装を用意。
+    - `util` や `context` パッケージ配下を参照
 
 #### Java コーディング方針
 
@@ -147,13 +155,13 @@ main
 1. ブラウザを立ち上げて 「 http://localhost:8761/ 」 で状態を確認
 1. *MicroApp.java* に対し 「 右クリック -> Run As -> Java Application 」
 1. *Console* タブに 「 Started Application 」 という文字列が出力されればポート 8090 で起動が完了
-1. ブラウザを立ち上げて 「 http://localhost:8090/api/management/health 」 で状態を確認
+1. ブラウザを立ち上げて 「 http://localhost:8090/management/health 」 で状態を確認
 1. *MicroAsset.java* に対し 「 右クリック -> Run As -> Java Application 」
 1. *Console* タブに 「 Started Application 」 という文字列が出力されればポート 8100 で起動が完了
-1. ブラウザを立ち上げて 「 http://localhost:8100/api/management/health 」 で状態を確認
+1. ブラウザを立ち上げて 「 http://localhost:8100/management/health 」 で状態を確認
 1. *MicroWeb.java* に対し 「 右クリック -> Run As -> Java Application 」
 1. *Console* タブに 「 Started Application 」 という文字列が出力されればポート 8080 で起動が完了
-1. ブラウザを立ち上げて 「 http://localhost:8080/api/management/health 」 で状態を確認
+1. ブラウザを立ち上げて 「 http://localhost:8080/management/health 」 で状態を確認
 
 > STS (Spring Tool Suite) のプラグインを利用すると上記 main クラスを GUI の Boot Dashboard 経由で簡単に実行できます。
 
@@ -168,7 +176,7 @@ Windows / Mac のコンソールから実行するには Gradle のコンソー�
 1. 別コンソールで 「 gradlew :micro-app:bootRun 」 を実行
 1. 別コンソールで 「 gradlew :micro-asset:bootRun 」 を実行
 1. 別コンソールで 「 gradlew :micro-web:bootRun 」 を実行
-1. ブラウザを立ち上げて 「 http://localhost:8080/api/management/health 」 で状態を確認
+1. ブラウザを立ち上げて 「 http://localhost:8080/management/health 」 で状態を確認
 
 #### クライアント検証
 
@@ -229,8 +237,8 @@ Spring Boot では Executable Jar ( ライブラリや静的リソースなど�
 
 #### DB / トランザクション
 
-`sample.context.orm` 直下。ドメイン実装をより Entity に寄せるための ORM サポート実装です。 Repository ( スキーマ単位で定義 ) にドメイン処理を記載しないアプローチのため、 Spring Boot が提供する JpaRepository は利用していません。  
-トランザクション定義はトラブルの種となるのでアプリケーション層でのみ許し、なるべく狭く限定した形で付与しています。単純な readOnly な処理のみ `@Transactional([Bean名称])` を利用してメソッド単位の対応を取ります。
+`sample.context.orm` 直下。ドメイン実装をより Entity に寄せるための ORM サポート実装です。 Repository ( スキーマ単位で定義 ) にドメイン処理を記載しないアプローチのため、 Spring Boot が提供する JpaRepository は利用していません。
+トランザクション定義はトラブルの種となるのでアプリケーション層でのみ許し、なるべく狭く限定した形で付与しています。トランザクションは AOP を利用せず、全て `TxTemplate` を用いたプログラマティックなアプローチで実装しています。
 
 スキーマは標準のビジネスロジック用途 ( `DefaultRepository` ) とシステム用途 ( `SystemRepository` ) の2種類を想定しています。 Entity 実装ではスキーマに依存させず、引数に渡す側 ( 主にアプリケーション層 ) で判断させます。
 
