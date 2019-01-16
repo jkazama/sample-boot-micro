@@ -1,15 +1,11 @@
 package sample;
 
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 
-import sample.api.ApiClient;
 import sample.context.*;
 import sample.context.actor.ActorSession;
 import sample.context.audit.AuditHandler;
@@ -96,11 +92,6 @@ public class ApplicationConfig {
     @Configuration
     @Import({RestErrorAdvice.class, RestErrorController.class})
     static class ApiConfig {
-        @Bean
-        ApiClient apiClient(
-                @LoadBalanced RestTemplate template, ObjectMapper mapper) {
-            return ApiClient.of(template, mapper);
-        }
     }
 
 }

@@ -6,6 +6,9 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import sample.api.ApiClient;
 import sample.context.actor.ActorSession;
 import sample.context.rest.RestActorSessionInterceptor;
 import sample.usecase.SecurityService;
@@ -20,6 +23,11 @@ public class MicroWebConfig {
     /** Spring Cloud 関連の定義を表現します。 */
     @Configuration
     static class DiscoveryAutoConfig {
+        
+        @Bean
+        ApiClient apiClient(RestTemplate template, ObjectMapper mapper) {
+            return ApiClient.of(template, mapper);
+        }
         
         /**
          * Ribbon 経由で Eureka がサポートしているサービスを実行するための RestTemplate。
