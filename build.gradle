@@ -3,7 +3,7 @@ plugins {
     id "io.spring.dependency-management" version "1.0.6.RELEASE"
 }
 
-ext.spring_cloud_version = "Finchley.SR2"
+ext.spring_cloud_version = "Greenwich.RELEASE"
 ext['lombok.version'] = "1.18.4"
 
 allprojects {
