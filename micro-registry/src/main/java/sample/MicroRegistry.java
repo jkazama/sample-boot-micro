@@ -33,7 +33,7 @@ public class MicroRegistry {
         @ConditionalOnProperty(prefix = "extension.test.db", name = "enabled", matchIfMissing = false)
         Server h2Server() {
             try {
-                return Server.createTcpServer("-tcpAllowOthers", "-tcpPort", "9092");
+                return Server.createTcpServer("-tcpAllowOthers", "-ifNotExists", "-tcpPort", "9092");
             } catch (SQLException e) {
                 throw new IllegalStateException(e);
             }
