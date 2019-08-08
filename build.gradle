@@ -1,9 +1,9 @@
 plugins {
-    id "org.springframework.boot" version "2.1.6.RELEASE"
-    id "io.spring.dependency-management" version "1.0.6.RELEASE"
+    id "org.springframework.boot" version "2.1.7.RELEASE"
+    id "io.spring.dependency-management" version "1.0.8.RELEASE"
 }
 
-ext.spring_cloud_version = "Greenwich.SR1"
+ext.spring_cloud_version = "Greenwich.SR2"
 ext['lombok.version'] = "1.18.8"
 
 allprojects {
@@ -13,7 +13,7 @@ allprojects {
 }
 
 subprojects {
-  version = "2.1.6"
+  version = "2.1.7"
 
   apply plugin: "java"
   apply plugin: "org.springframework.boot"
@@ -64,8 +64,8 @@ subprojects {
     implementation "org.ehcache:ehcache"
     implementation "javax.cache:cache-api"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5"
-    implementation "org.eclipse.collections:eclipse-collections:9.2.0"
-    implementation "org.eclipse.collections:eclipse-collections-api:9.2.0"
+    implementation "org.eclipse.collections:eclipse-collections:10.0.0"
+    implementation "org.eclipse.collections:eclipse-collections-api:10.0.0"
     implementation "commons-io:commons-io:2.6"
     implementation "org.apache.commons:commons-lang3"
     implementation "com.ibm.icu:icu4j:64.2"
@@ -97,5 +97,5 @@ project(':micro-web') {
 }
 
 wrapper {
-  gradleVersion = "5.4.1"
+  gradleVersion = "5.5.1"
 }
