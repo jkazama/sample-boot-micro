@@ -19,30 +19,30 @@ import sample.microasset.model.asset.CashInOut.RegCashOut;
 public class AssetFacadeInvoker implements AssetFacade {
 
     private final ApiClient client;
-    private final String appliationName;
-    
+    private final String url;
+
     public AssetFacadeInvoker(
             ApiClient client,
-            @Value("${extension.remoting.asset}")
-            String applicationName) {
+            @Value("${extension.remoting.asset}") String url) {
         this.client = client;
-        this.appliationName = applicationName;
+        this.url = url;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public List<CashInOut> findUnprocessedCashOut() {
-        return invoker().get(PathFindUnprocessedCashOut, new ParameterizedTypeReference<List<CashInOut>>() {});
+        return invoker().get(PathFindUnprocessedCashOut, new ParameterizedTypeReference<List<CashInOut>>() {
+        });
     }
-    
+
     private RestInvoker invoker() {
-        return client.invoker(appliationName, Path);
+        return client.invoker(url, Path);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public ResponseEntity<Long> withdraw(RegCashOut p) {
         return invoker().postEntity(PathWithdraw, Long.class, p);
     }
-    
+
 }

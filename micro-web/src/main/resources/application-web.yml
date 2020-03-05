@@ -17,8 +17,17 @@ extension:
     cors.enabled: true
   mail.enabled: false
   remoting:
-    app: micro-app
-    asset: micro-asset
+    app: ${APPLICATION_APP_URL:http://micro-app}
+    asset: ${APPLICATION_ASSET_URL:http://micro-asset}
+
+---
+spring:
+  profiles: production
+
+extension:
+  security:
+    auth.enabled: true
+    cors.enabled: false
 
 ---
 spring:

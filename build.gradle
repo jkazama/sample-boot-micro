@@ -1,19 +1,19 @@
 plugins {
-    id "org.springframework.boot" version "2.1.7.RELEASE"
-    id "io.spring.dependency-management" version "1.0.8.RELEASE"
+    id "org.springframework.boot" version "2.2.5.RELEASE"
+    id "io.spring.dependency-management" version "1.0.9.RELEASE"
 }
 
-ext.spring_cloud_version = "Greenwich.SR2"
-ext['lombok.version'] = "1.18.8"
+ext.spring_cloud_version = "Hoxton.SR2"
+ext['lombok.version'] = "1.18.12"
 
 allprojects {
   repositories {
-    jcenter() 
+    mavenCentral() 
   }
 }
 
 subprojects {
-  version = "2.1.7"
+  version = "2.2.5"
 
   apply plugin: "java"
   apply plugin: "org.springframework.boot"
@@ -61,14 +61,13 @@ subprojects {
     implementation "org.springframework.boot:spring-boot-starter-cache"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "com.github.ben-manes.caffeine:caffeine"
     implementation "org.ehcache:ehcache"
     implementation "javax.cache:cache-api"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5"
-    implementation "org.eclipse.collections:eclipse-collections:10.0.0"
-    implementation "org.eclipse.collections:eclipse-collections-api:10.0.0"
     implementation "commons-io:commons-io:2.6"
     implementation "org.apache.commons:commons-lang3"
-    implementation "com.ibm.icu:icu4j:64.2"
+    implementation "com.ibm.icu:icu4j:65.1"
     implementation fileTree(dir: 'libs', includes: ['*.jar'])
     runtime "com.h2database:h2"
     testAnnotationProcessor "org.projectlombok:lombok"
@@ -77,25 +76,6 @@ subprojects {
   }
 }
 
-project(':micro-app') {
-  dependencies {
-    implementation project(':micro-core')
-  }
-}
-
-project(':micro-asset') {
-  dependencies {
-    implementation project(':micro-core')
-  }
-}
-
-project(':micro-web') {
-  dependencies {
-    implementation project(':micro-core')
-    implementation project(':micro-asset')
-  }
-}
-
 wrapper {
-  gradleVersion = "5.5.1"
+  gradleVersion = "6.2.2"
 }

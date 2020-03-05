@@ -3,3 +3,7 @@ bootJar {
   classifier = 'exec'
 }
 jar.enabled=true
+
+dependencies {
+  implementation project(':micro-core')
+}

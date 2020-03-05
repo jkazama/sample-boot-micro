@@ -2,8 +2,6 @@
 spring:
   profiles: app
   application.name: micro-app
-  boot.admin:
-    discovery.converter.management-context-path: ${management.endpoints.web.base-path}
 
 server:
   port: 8090
@@ -13,3 +11,13 @@ extension:
     default.jpa.hibernate.ddl-auto: create-drop
     system.jpa.hibernate.ddl-auto: create-drop
   datafixture.enabled: true
+
+---
+spring:
+  profiles: production
+  
+extension:
+  datasource:
+    default.jpa.hibernate.ddl-auto: none
+    system.jpa.hibernate.ddl-auto: none
+  datafixture.enabled: false

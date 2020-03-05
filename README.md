@@ -3,7 +3,7 @@ sample-boot-micro
 
 ### はじめに
 
-[Spring Cloud Netflix](https://cloud.spring.io/spring-cloud-netflix/) の仕組みを利用したマイクロサービス実装サンプルです。
+[Spring Cloud](https://spring.io/projects/spring-cloud) の仕組みを利用したマイクロサービス実装サンプルです。
 
 [Spring Boot](http://projects.spring.io/spring-boot/) / [Spring Security](http://projects.spring.io/spring-security/) / [Hibernate ORM](http://hibernate.org/orm/) を元にしたマルチプロジェクト下での DDD サンプルとしても利用できます。  
 
@@ -224,8 +224,8 @@ Spring Boot では Executable Jar ( ライブラリや静的リソースなど�
 
 | ライブラリ               | バージョン | 用途/追加理由 |
 | ----------------------- | -------- | ------------- |
-| `spring-cloud`          | Greenwich.+ | Spring Cloud 基盤 |
-| `spring-boot-starter-*` | 2.1.+    | Spring Boot 基盤 (actuator/security/aop/cache/data-jpa/web) |
+| `spring-cloud`          | Hoxton.+ | Spring Cloud 基盤 |
+| `spring-boot-starter-*` | 2.2.+    | Spring Boot 基盤 (actuator/security/aop/cache/data-jpa/web) |
 
 > 実際の詳細な定義は `build.gradle` を参照してください
 

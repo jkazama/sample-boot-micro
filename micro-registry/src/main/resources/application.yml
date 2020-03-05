@@ -8,6 +8,7 @@ spring:
   security.user.password: unused
   autoconfigure.exclude:
     - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  cloud.loadbalancer.ribbon.enabled: false
 
 server:
   port: 8761

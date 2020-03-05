@@ -16,7 +16,7 @@ import sample.model.DomainErrorKeys;
 import sample.model.account.*;
 import sample.model.master.SelfFiAccount;
 
-//low: 簡易な正常系検証が中心。依存するCashflow/CashBalanceの単体検証パスを前提。
+// low: 簡易な正常系検証が中心。依存するCashflow/CashBalanceの単体検証パスを前提。
 public class CashInOutTest extends EntityTestSupport {
 
     private static final String ccy = "JPY";
@@ -47,7 +47,7 @@ public class CashInOutTest extends EntityTestSupport {
         LocalDate basePlus2Day = businessDay.day(2);
         tx(() -> {
             fixturesAsset.cio(accId, "300", true).save(rep);
-            //low: ちゃんとやると大変なので最低限の検証
+            // low: ちゃんとやると大変なので最低限の検証
             assertThat(
                     CashInOut.find(rep, findParam(baseDay, basePlus1Day)),
                     hasSize(1));
@@ -68,7 +68,6 @@ public class CashInOutTest extends EntityTestSupport {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void 振込出金依頼をする() {
         LocalDate baseDay = businessDay.day();
         LocalDate basePlus3Day = businessDay.day(3);
@@ -90,7 +89,8 @@ public class CashInOutTest extends EntityTestSupport {
             }
 
             // 通常の出金依頼
-            CashInOut normal = CashInOut.withdraw(rep, rep, businessDay, new RegCashOut(accId, ccy, new BigDecimal("300")));
+            CashInOut normal = CashInOut.withdraw(rep, rep, businessDay,
+                    new RegCashOut(accId, ccy, new BigDecimal("300")));
             assertThat(normal, allOf(
                     hasProperty("accountId", is(accId)), hasProperty("currency", is(ccy)),
                     hasProperty("absAmount", is(new BigDecimal(300))), hasProperty("withdrawal", is(true)),
@@ -157,7 +157,6 @@ public class CashInOutTest extends EntityTestSupport {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void 発生日を迎えた振込入出金をキャッシュフロー登録する() {
         LocalDate baseDay = businessDay.day();
         LocalDate basePlus3Day = businessDay.day(3);
